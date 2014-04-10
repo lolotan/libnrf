@@ -21,8 +21,8 @@ int  SPI_Write(int fd, char * WriteBuffer, int Length)
 	return RetVal;
 }
 
-char SPI_WriteReadByte(int fd, char WriteByte)
+int  SPI_WriteRead(int fd, char * WriteBuffer, char * ReadBuffer, int Length)
 {
-	char ReadByte;
-	return ReadByte;
+	int RetVal;
+	return RetVal;
 }
