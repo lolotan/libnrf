@@ -7,13 +7,14 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include <getopt.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
-static int fd; // Global SPI device descriptor
-static uint8_t bits;
+
+// Global SPI setup variables
+static int 		fd;
+static uint8_t 	bits;
 static uint32_t speed;
 static uint16_t delay;
 
