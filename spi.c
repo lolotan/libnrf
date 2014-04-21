@@ -25,10 +25,10 @@ int  SPI_Init()
 {
 	int          ret;	
 	uint8_t      mode;
-	const char * spi_device = "/dev/spidev0.0";
+	const char * spi_device = SPI_DEVICE;
 	
 	bits  = 0;
-	speed = 500000;
+	speed = 2000000;
 	delay = 0;
 	mode  = 0;
 	
