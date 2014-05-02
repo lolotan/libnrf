@@ -65,22 +65,17 @@ void GPIO_Init(void)
 	// Always use volatile pointer!
 	gpio = (volatile unsigned *)gpio_map;
 
-	// Initialize GPIO for CSN / CE / IRQ pins
+	// Initialize GPIO for CE / IRQ pins (CSN not needed on RPi)
 	// Set CE to output mode
 	INP_GPIO(GPIO_CE); 
 	OUT_GPIO(GPIO_CE);
-	// Set CSN to output mode
-	INP_GPIO(GPIO_CSN); 
-	OUT_GPIO(GPIO_CSN);
+	
+	GPIO_SetCE(GPIO_OFF);
 }
 
 void GPIO_SetCSN(int GPIOState)
 {
-	if (GPIOState == GPIO_ON) {
-		GPIO_SET = 1<<GPIO_CSN;
-	} else {
-		GPIO_CLR = 1<<GPIO_CSN;
-	}
+	// CSN not needed 
 }
 
 void GPIO_SetCE(int GPIOState)

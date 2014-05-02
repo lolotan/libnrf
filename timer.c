@@ -34,14 +34,6 @@ void TIMER_Init(void)
 	close(fd); //No need to keep fd open after mmap
 }
 
-void TIMER_Wait_us(int usvalue)
-{
-	if (usvalue < 100)
-		TIMER_RPI_Timer(usvalue);	// Special system timer sleep
-	else
-		usleep(usvalue);			// Linux usleep standard function
-}
-
 void TIMER_RPI_Timer(int usvalue)
 {
 	long long int *timer;
@@ -50,4 +42,12 @@ void TIMER_RPI_Timer(int usvalue)
 	timer = (long long int *)((char *)st_base + TIMER_OFFSET);
 	start = *timer;
 	while (*timer - start < usvalue);
+}
+
+void TIMER_Wait_us(int usvalue)
+{
+	if (usvalue < 100)
+		TIMER_RPI_Timer(usvalue);	// Special system timer sleep
+	else
+		usleep(usvalue);			// Linux usleep standard function
 }

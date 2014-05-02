@@ -2,6 +2,7 @@
 /* NRF24L01 definitions for nrf library */
 /****************************************/
 
+#define NRF24L01P
 
 // NRF24L01 Commands
 #define R_REGISTER			0x00	// Read register
@@ -18,6 +19,7 @@
 #define NOP           		0xFF  	// No Operation, used for reading status register
 
 // NRF24L01 Registers
+#define REGISTER_MASK       0x1F
 #define CONFIG				0x00	// Configuration register
 #define EN_AA				0x01	// Enable Auto Acknowledgement function
 #define EN_RXADDR			0x02	// Enabled RX Addresses
@@ -47,6 +49,7 @@
 
 
 // Bits for register bits
+#define BYTE_MASK           0xFF
 #define BIT0				0x01
 #define BIT1				0x02
 #define BIT2				0x04
@@ -84,7 +87,12 @@
 
 // RF_SETUP
 #define PLL_LOCK			BIT4
-#define RF_DR				BIT3
+#ifdef NRF24L01P
+#define RF_DR_LOW           BIT5
+#define RF_DR_HIGH			BIT3
+#else
+#define RF_DR   			BIT3
+#endif
 #define RF_PWR				BIT2 | BIT1
 #define LNA_HCURR			BIT0
 

@@ -8,7 +8,6 @@
 
 #define GPIO_IRQ	23
 #define GPIO_CE		24
-#define GPIO_CSN	25
 
 void GPIO_Init(void);
 void GPIO_SetCSN(int);
