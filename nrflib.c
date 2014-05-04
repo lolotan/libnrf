@@ -166,7 +166,4 @@ int NRF_SetPAControl(PACtrl PACtrlValue, char * RetStatus)
     return Ret;
 }
 
-int NRF_SetLNAGain(LNAGain LNAGainValue, char * RetStatus)
-{
-    return 0;
-}
+

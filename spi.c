@@ -63,7 +63,6 @@ int SPI_SendCommand(char Command, char * RetStatus)
 
 int SPI_CommandWrite(char Command, char * WriteBuffer, int Length, char * RetStatus)
 {
-    //printf("SPI_CommandWrite : Command %.2X Buffer %.2X Length %.2X ",Command, *WriteBuffer, Length);
     int Ret;
 	struct spi_ioc_transfer SpiCtrl[2];
     memset(SpiCtrl, 0x00, sizeof(SpiCtrl));
@@ -83,13 +82,11 @@ int SPI_CommandWrite(char Command, char * WriteBuffer, int Length, char * RetSta
 	SpiCtrl[1].speed_hz = spi_speed;
 	SpiCtrl[1].bits_per_word = spi_bits;
 	Ret = ioctl(fd, SPI_IOC_MESSAGE(2), &SpiCtrl);
-    //printf("Status %.2X\n", *RetStatus);
 	return Ret;
 }
 
 int	SPI_CommandRead(char Command, char * ReadBuffer, int Length, char * RetStatus)
 {
-    //printf("SPI_CommandRead : Command %.2X ",Command);
     int Ret;
     struct spi_ioc_transfer SpiCtrl[2];
     memset(SpiCtrl, 0x00, sizeof(SpiCtrl));
@@ -109,7 +106,5 @@ int	SPI_CommandRead(char Command, char * ReadBuffer, int Length, char * RetStatu
 	SpiCtrl[1].speed_hz = spi_speed;
 	SpiCtrl[1].bits_per_word = spi_bits;
 	Ret = ioctl(fd, SPI_IOC_MESSAGE(2), &SpiCtrl);
-    //printf("Buffer %.2X Length %.2X ",*ReadBuffer, Length);
-    //printf("Status %.2X\n", *RetStatus);
 	return Ret;
 }

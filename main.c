@@ -4,8 +4,8 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include "nrflib.h"
-
 
 int main(void)
 {	
@@ -36,27 +36,25 @@ int main(void)
     Ret = NRF_ReadRegister(CONFIG, &TestVal, 1, &Status);
     printf("Read CONFIG register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
-    Ret = NRF_SetModePRX(&Status);
-    printf("SetModePRX register : return %d status %.2X\n", Ret, Status);
+    
+    Ret = NRF_SetModePTX(&Status);
+    printf("SetModePTX register : return %d status %.2X\n", Ret, Status);
     
     TIMER_Wait_us(130); // Tstby2a datasheet p.22
 
     Ret = NRF_ReadRegister(CONFIG, &TestVal, 1, &Status);
     printf("Read CONFIG register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
-    /*
-    Ret = NRF_GetStatus(&Status);
-    printf("Status register : return %d value %.2X\n", Ret, Status);
     
     Ret = NRF_ReadRegister(RF_SETUP, &TestVal, 1, &Status);
     printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
-    Ret = NRF_SetDataRate(DR250KBPS, &Status);
+    Ret = NRF_SetDataRate(DR2MBPS, &Status);
     printf("Test Data Rate : return %d status %.2X\n", Ret, Status);
     
-    
     Ret = NRF_ReadRegister(RF_SETUP, &TestVal, 1, &Status);
     printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
+
     
     Ret = NRF_SetPAControl(PA18DBM, &Status);
     printf("Test PA Control : return %d status %.2X\n", Ret, Status);
@@ -64,7 +62,7 @@ int main(void)
     Ret = NRF_ReadRegister(RF_SETUP, &TestVal, 1, &Status);
     printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
-    
+    /*
     Ret = NRF_ReadRegister(RF_CH, &TestVal, 1, &Status);
     printf("Read RF_CH register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
