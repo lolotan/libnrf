@@ -20,56 +20,45 @@ int NRF_Init(void)
 
 int NRF_GetStatus(char * RetStatus)
 {
-    int Ret;
-    Ret = SPI_SendCommand(NOP, RetStatus);
-	return Ret;
+	return SPI_SendCommand(NOP, RetStatus);
 }
 
 int NRF_SendCommand(char Command, char * RetStatus)
 {
-    int Ret;
-    Ret = SPI_SendCommand(Command, RetStatus);
-    return Ret;
+    return SPI_SendCommand(Command, RetStatus);
 }
 
 int NRF_ReadRegister(char Register, char * ReadBuffer, int Length, char * RetStatus)
 {
-    int Ret;
-    Ret = SPI_CommandRead((R_REGISTER | Register), ReadBuffer, Length, RetStatus);
-    return Ret;
+    return SPI_CommandRead((Register | R_REGISTER), ReadBuffer, Length, RetStatus);
 }
 
 int NRF_WriteRegister(char Register, char * WriteBuffer, int Length, char * RetStatus)
 {
-    int Ret;    
-    Ret = SPI_CommandWrite((W_REGISTER | Register), WriteBuffer, Length, RetStatus);
-    return Ret;
+    return SPI_CommandWrite((Register | W_REGISTER), WriteBuffer, Length, RetStatus);
 }
 
 int NRF_WriteTXPayload(char * TXPayload, int Length, char * RetStatus)
 {
-    int Ret;
-    Ret = SPI_CommandWrite(W_TX_PAYLOAD, TXPayload, Length, RetStatus);
-    return Ret;
+    return SPI_CommandWrite(W_TX_PAYLOAD, TXPayload, Length, RetStatus);
 }
 
 int NRF_ReadRXPayload(char * RXPayload, int Length, char * RetStatus)
 {
-    int Ret;
-    Ret = SPI_CommandRead(R_RX_PAYLOAD, RXPayload, Length, RetStatus);
-    return Ret;
+    return SPI_CommandRead(R_RX_PAYLOAD, RXPayload, Length, RetStatus);
 }
 
 int NRF_SetModePRX(char * RetStatus)
 {
-    char ConfigRegister;
+    char ConfigRegister = 0;
     int Ret;
     
     Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, 1, RetStatus);
     if (Ret < 0)
         return Ret;
-        
+    
     ConfigRegister |= PRIM_RX; // Set PRX Mode with PRIM_RX = 1
+    
     Ret = NRF_WriteRegister(CONFIG, &ConfigRegister, 1, RetStatus);
     return Ret;
 }
@@ -84,6 +73,7 @@ int NRF_SetModePTX(char * RetStatus)
         return Ret;
 
     ConfigRegister &= ~PRIM_RX ; // Set PTX Mode with PRIM_RX = 0
+    
     Ret = NRF_WriteRegister(CONFIG, &ConfigRegister, 1, RetStatus);
     return Ret;
 }
@@ -96,7 +86,7 @@ int NRF_SetPowerMode(PowerMode Power, char * RetStatus)
     Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, 1, RetStatus);
     if (Ret < 0)
         return Ret;
-    
+        
     if (Power == POWER_OFF)
         ConfigRegister &= ~PWR_UP; // PWR_UP = 0
     else
@@ -178,5 +168,5 @@ int NRF_SetPAControl(PACtrl PACtrlValue, char * RetStatus)
 
 int NRF_SetLNAGain(LNAGain LNAGainValue, char * RetStatus)
 {
-    
+    return 0;
 }
