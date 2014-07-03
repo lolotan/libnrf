@@ -40,7 +40,7 @@ typedef enum
 #define TIME_TX_PULSE	12		// Min TX pulse
 #define TIME_TPD2STBY	4600	// Power down -> Standby
 #define TIME_TSTBY2A	140		// Standby modes -> TX/RX mode
-#define TIME_TPECE3CSN	5		// CE positive edge to CSN LOW
+#define TIME_TPECE3CSN	5       // CE positive edge to CSN LOW
 
 int NRF_Init(void);
 
