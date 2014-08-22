@@ -30,14 +30,24 @@ int NRF_SendCommand(char Command, char * RetStatus)
     return SPI_SendCommand(Command, RetStatus);
 }
 
-int NRF_ReadRegister(char Register, char * ReadBuffer, int Length, char * RetStatus)
+int NRF_ReadRegisterMB(char Register, char * ReadBuffer, int Length, char * RetStatus)
 {
     return SPI_CommandRead((Register | R_REGISTER), ReadBuffer, Length, RetStatus);
 }
 
-int NRF_WriteRegister(char Register, char * WriteBuffer, int Length, char * RetStatus)
+int NRF_ReadRegister(char Register, char * RegisterValue, char * RetStatus)
+{
+    return SPI_CommandRead((Register | R_REGISTER), RegisterValue, 1, RetStatus);
+}
+
+int NRF_WriteRegisterMB(char Register, char * WriteBuffer, int Length, char * RetStatus)
 {
     return SPI_CommandWrite((Register | W_REGISTER), WriteBuffer, Length, RetStatus);
+}
+
+int NRF_WriteRegister(char Register, char RegisterValue, char * RetStatus)
+{
+    return SPI_CommandWrite((Register | W_REGISTER), &RegisterValue, 1, RetStatus);
 }
 
 int NRF_WriteTXPayload(char * TXPayload, int Length, char * RetStatus)
@@ -55,13 +65,13 @@ int NRF_SetModePRX(char * RetStatus)
     char ConfigRegister = 0;
     int Ret;
     
-    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, 1, RetStatus);
+    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, RetStatus);
     if (Ret < 0)
         return Ret;
     
     ConfigRegister |= PRIM_RX;      // Set PRX Mode with PRIM_RX = 1
     
-    Ret = NRF_WriteRegister(CONFIG, &ConfigRegister, 1, RetStatus);
+    Ret = NRF_WriteRegister(CONFIG, ConfigRegister, RetStatus);
     
     TIMER_Wait_us(TIME_TSTBY2A);    // Wait Tstby2a time
     return Ret;
@@ -72,13 +82,13 @@ int NRF_SetModePTX(char * RetStatus)
     char ConfigRegister;
     int Ret;
     
-    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, 1, RetStatus);
+    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, RetStatus);
     if (Ret < 0)
         return Ret;
 
     ConfigRegister &= ~PRIM_RX ;    // Set PTX Mode with PRIM_RX = 0
     
-    Ret = NRF_WriteRegister(CONFIG, &ConfigRegister, 1, RetStatus);
+    Ret = NRF_WriteRegister(CONFIG, ConfigRegister, RetStatus);
     
     TIMER_Wait_us(TIME_TSTBY2A);    // Wait Tstby2a time
     return Ret;
@@ -89,7 +99,7 @@ int NRF_SetPowerMode(PowerMode Power, char * RetStatus)
     char ConfigRegister;
     int Ret;
 
-    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, 1, RetStatus);
+    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, RetStatus);
     if (Ret < 0)
         return Ret;
         
@@ -98,7 +108,7 @@ int NRF_SetPowerMode(PowerMode Power, char * RetStatus)
     else
         ConfigRegister |= PWR_UP;   // PWR_UP = 1
     
-    Ret = NRF_WriteRegister(CONFIG, &ConfigRegister, 1, RetStatus);
+    Ret = NRF_WriteRegister(CONFIG, ConfigRegister, RetStatus);
     
     TIMER_Wait_us(TIME_TPD2STBY);   // Wait Tpd2stby time
     return Ret;
@@ -109,7 +119,7 @@ int NRF_SetDataRate(DataRate DataRateValue, char * RetStatus)
     int Ret;
     char RFSetup;
     
-    Ret = NRF_ReadRegister(RF_SETUP, &RFSetup, 1, RetStatus);
+    Ret = NRF_ReadRegister(RF_SETUP, &RFSetup, RetStatus);
     if (Ret < 0)
         return Ret;
     
@@ -147,7 +157,7 @@ int NRF_SetDataRate(DataRate DataRateValue, char * RetStatus)
             RFSetup |= RF_DR;
         #endif
     }
-    Ret = NRF_WriteRegister(RF_SETUP, &RFSetup, 1, RetStatus);
+    Ret = NRF_WriteRegister(RF_SETUP, RFSetup, RetStatus);
     return Ret;
 }
 
@@ -155,7 +165,7 @@ int NRF_SetRFChannel(int RFChannel, char * RetStatus)
 {
     int Ret;
     RFChannel &= 0x7F;
-    Ret = NRF_WriteRegister(RF_CH, (char *)&RFChannel, 1, RetStatus);
+    Ret = NRF_WriteRegister(RF_CH, (char)RFChannel, RetStatus);
     return Ret;
 }
 
@@ -164,13 +174,13 @@ int NRF_SetPAControl(PACtrl PACtrlValue, char * RetStatus)
     int Ret;
     char RFSetup;
     
-    Ret = NRF_ReadRegister(RF_SETUP, &RFSetup, 1, RetStatus);
+    Ret = NRF_ReadRegister(RF_SETUP, &RFSetup, RetStatus);
     if (Ret < 0)
         return Ret;
         
     RFSetup &= 0xF9;
     RFSetup |= ((PACtrlValue << 1) & 0xF9);
-    Ret = NRF_WriteRegister(RF_SETUP, &RFSetup, 1, RetStatus); 
+    Ret = NRF_WriteRegister(RF_SETUP, RFSetup, RetStatus); 
     return Ret;
 }
 

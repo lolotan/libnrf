@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <string.h>
 #include "nrflib.h"
-#include "spi.h"
 #include "timer.h"
 
 int main(void)
@@ -24,10 +23,10 @@ int main(void)
 
     Status = 0x00;
     TestVal = 0x00;
-    Ret = SPI_CommandWrite(W_REGISTER | CONFIG, &TestVal, 1, &Status);
+    Ret = NRF_WriteRegister(CONFIG, 0x00, &Status);
     TIMER_Wait_us(1600);
     
-    Ret = NRF_ReadRegister(CONFIG, &TestVal, 1, &Status);
+    Ret = NRF_ReadRegister(CONFIG, &TestVal, &Status);
     printf("Read CONFIG register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
     Ret = NRF_SetPowerMode(POWER_ON, &Status);
@@ -35,7 +34,7 @@ int main(void)
     
     TIMER_Wait_us(1600); // Tpd2stby datasheet p.22
 
-    Ret = NRF_ReadRegister(CONFIG, &TestVal, 1, &Status);
+    Ret = NRF_ReadRegister(CONFIG, &TestVal, &Status);
     printf("Read CONFIG register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
     
@@ -44,24 +43,24 @@ int main(void)
     
     TIMER_Wait_us(130); // Tstby2a datasheet p.22
 
-    Ret = NRF_ReadRegister(CONFIG, &TestVal, 1, &Status);
+    Ret = NRF_ReadRegister(CONFIG, &TestVal, &Status);
     printf("Read CONFIG register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
     
-    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, 1, &Status);
+    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, &Status);
     printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
     Ret = NRF_SetDataRate(DR2MBPS, &Status);
     printf("Test Data Rate : return %d status %.2X\n", Ret, Status);
     
-    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, 1, &Status);
+    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, &Status);
     printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
 
     
     Ret = NRF_SetPAControl(PA18DBM, &Status);
     printf("Test PA Control : return %d status %.2X\n", Ret, Status);
     
-    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, 1, &Status);
+    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, &Status);
     printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
     
     /*

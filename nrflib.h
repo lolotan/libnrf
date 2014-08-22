@@ -42,8 +42,12 @@ typedef enum
 int NRF_Init(void);
 
 int NRF_SendCommand(char, char *);
-int NRF_ReadRegister(char, char *, int, char *);
-int NRF_WriteRegister(char, char *, int, char *);
+
+int NRF_ReadRegisterMB(char, char *, int, char *);
+int NRF_ReadRegister(char, char *, char *);
+int NRF_WriteRegisterMB(char, char *, int, char *);
+int NRF_WriteRegister(char, char , char *);
+
 int NRF_WriteTXPayload(char *, int, char *);
 int NRF_ReadRXPayload(char *, int, char *);
 
