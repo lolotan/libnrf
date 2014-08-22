@@ -6,12 +6,12 @@ MAIN = main
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): nrflib.o spi.o gpio.o timer.o $(MAIN).o
-	$(CC) nrflib.o spi.o gpio.o timer.o $(MAIN).o -o $(EXECUTABLE)
+	$(CC) spi.o gpio.o timer.o nrflib.o $(MAIN).o -o $(EXECUTABLE)
 
 $(MAIN).o: $(MAIN).c
 	$(CC) $(CFLAG) $(MAIN).c
 
-nrflib.o: nrflib.c
+nrflib.o: nrflib.c spi.o gpio.o timer.o
 	$(CC) $(CFLAG) nrflib.c
 	
 spi.o: spi.c

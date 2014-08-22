@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <string.h>
 #include "nrflib.h"
+#include "spi.h"
+#include "timer.h"
 
 int main(void)
 {	

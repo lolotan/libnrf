@@ -6,8 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "spi.h"
+#include "gpio.h"
+#include "timer.h"
 #include "nrflib.h"
-
 
 int NRF_Init(void)
 {
