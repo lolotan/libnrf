@@ -60,3 +60,16 @@ int NRF_SetDataRate(DataRate, char *);
 int NRF_SetRFChannel(int, char *);
 int NRF_SetPAControl(PACtrl, char *);
 
+// int NRF_SetAutoRetransmitDelay(int, char *);
+// int NRF_SetAutoRetransmitCount(int, char *);
+// int NRF_SetAddressWidth(int, char *);
+// int NRF_SeTxAddress(char *, char *);
+// int NRF_SeRxAddressP0(char *, char *);
+// int NRF_SeRxAddressP1(char, char *);
+// int NRF_SeRxAddressP2(char, char *);
+// int NRF_SeRxAddressP3(char, char *);
+// int NRF_SeRxAddressP4(char, char *);
+// int NRF_SeRxAddressP5(char, char *);
+
+
+
