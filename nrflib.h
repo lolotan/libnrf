@@ -33,6 +33,16 @@ typedef enum
     LNAGainON  = 0x01
 } LNAGain;
 
+typedef enum
+{
+    P0 = 0x00,
+    P1,
+    P2,
+    P3,
+    P4,
+    P5
+} DataPipe;
+
 // Following timings values has a security margin added
 #define TIME_TX_PULSE	12		// Min TX pulse
 #define TIME_TPD2STBY	4600	// Power down -> Standby
@@ -60,16 +70,16 @@ int NRF_SetDataRate(DataRate, char *);
 int NRF_SetRFChannel(int, char *);
 int NRF_SetPAControl(PACtrl, char *);
 
-// int NRF_SetAutoRetransmitDelay(int, char *);
+// int NRF_SetAutoRetransmitDelay(int, char *); // p33/78
 // int NRF_SetAutoRetransmitCount(int, char *);
+// int NRF_GetLostPacketsCount(int *);
+// int NRF_GetLostRetriesCount(int *);
+
 // int NRF_SetAddressWidth(int, char *);
-// int NRF_SeTxAddress(char *, char *);
-// int NRF_SeRxAddressP0(char *, char *);
-// int NRF_SeRxAddressP1(char, char *);
-// int NRF_SeRxAddressP2(char, char *);
-// int NRF_SeRxAddressP3(char, char *);
-// int NRF_SeRxAddressP4(char, char *);
-// int NRF_SeRxAddressP5(char, char *);
+// int NRF_SetTxAddress(char *, char *);
+// int NRF_SetRxAddress(DataPipe, char *, char *);
+// int NRF_EnableDataPie(DataPipe);
+
 
 
 
