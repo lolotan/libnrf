@@ -184,4 +184,80 @@ int NRF_SetPAControl(PACtrl PACtrlValue, char * RetStatus)
     return Ret;
 }
 
+int NRF_ClearRX_DR(char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
 
+int NRF_ClearTX_DS(char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_ClearMAX_RT(char *  RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_DisplayStatus(char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_SetAutoRetransmitDelay(int Delay, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_SetAutoRetransmitCount(int Count, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_GetLostPacketsCount(int * Count, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_GetLostRetriesCount(int * Count, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_SetAddressWidth(int Width, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_SetTxAddress(char * Address, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_SetRxAddress(DataPipe DPipe, char * Address, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_EnableDataPipe(DataPipe DPipe, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
+
+int NRF_SetDataPipeLength(DataPipe DPipe, int Length, char * RetStatus)
+{
+    int Ret;
+    return Ret;
+}
