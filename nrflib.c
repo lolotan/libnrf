@@ -202,7 +202,7 @@ int NRF_ClearMAX_RT(char *  RetStatus)
     return Ret;
 }
 
-int NRF_DisplayStatus(char * RetStatus)
+void NRF_DisplayStatus(char Status)
 {
     int Ret;
     return Ret;
@@ -260,4 +260,16 @@ int NRF_SetDataPipeLength(DataPipe DPipe, int Length, char * RetStatus)
 {
     int Ret;
     return Ret;
+}
+
+int NRF_StartRX(void)
+{
+}
+
+int RRF_StopRX(void)
+{
+}
+
+int NRF_TXPayload(void)
+{
 }

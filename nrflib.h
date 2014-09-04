@@ -43,7 +43,7 @@ typedef enum
     P5
 } DataPipe;
 
-// Following timings values has a security margin added
+// Following timings values has a safety margin added
 #define TIME_TX_PULSE	12		// Min TX pulse
 #define TIME_TPD2STBY	4600	// Power down -> Standby
 #define TIME_TSTBY2A	140		// Standby modes -> TX/RX mode
@@ -62,10 +62,10 @@ int NRF_WriteTXPayload(char *, int, char *);
 int NRF_ReadRXPayload(char *, int, char *);
 
 int NRF_GetStatus(char *);
-//int NRF_ClearRX_DR(char *);
-//int NRF_ClearTX_DS(char *);
-//int NRF_ClearMAX_RT(char *);
-// int NRF_DisplayStatus(char *);
+int NRF_ClearRX_DR(char *);
+int NRF_ClearTX_DS(char *);
+int NRF_ClearMAX_RT(char *);
+void NRF_DisplayStatus(char);
 
 int NRF_SetModePRX(char *);
 int NRF_SetModePTX(char *);
@@ -74,17 +74,19 @@ int NRF_SetDataRate(DataRate, char *);
 int NRF_SetRFChannel(int, char *);
 int NRF_SetPAControl(PACtrl, char *);
 
-// int NRF_SetAutoRetransmitDelay(int, char *); // p33/78
-// int NRF_SetAutoRetransmitCount(int, char *);
-// int NRF_GetLostPacketsCount(int *, char *);
-// int NRF_GetLostRetriesCount(int *, char *);
+int NRF_SetAutoRetransmitDelay(int, char *); // p33/78
+int NRF_SetAutoRetransmitCount(int, char *);
+int NRF_GetLostPacketsCount(int *, char *);
+int NRF_GetLostRetriesCount(int *, char *);
 
-// int NRF_SetAddressWidth(int, char *);
-// int NRF_SetTxAddress(char *, char *);
-// int NRF_SetRxAddress(DataPipe, char *, char *);
-// int NRF_EnableDataPipe(DataPipe, char *);
-// int NRF_SetDataPipeLength(DataPipe, int, char *)
+int NRF_SetAddressWidth(int, char *);
+int NRF_SetTxAddress(char *, char *);
+int NRF_SetRxAddress(DataPipe, char *, char *);
+int NRF_EnableDataPipe(DataPipe, char *);
+int NRF_SetDataPipeLength(DataPipe, int, char *);
 
-
+int NRF_StartRX(void);
+int RRF_StopRX(void);
+int NRF_TXPayload(void);
 
 
