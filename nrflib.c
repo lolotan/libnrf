@@ -187,25 +187,51 @@ int NRF_SetPAControl(PACtrl PACtrlValue, char * RetStatus)
 int NRF_ClearRX_DR(char * RetStatus)
 {
     int Ret;
+    char StatusReg;
+    Ret = NRF_ReadRegister(STATUS, &StatusReg, RetStatus);
+    if (Ret < 0)
+        return Ret;
+    StatusReg |= RX_DR;
+    Ret = NRF_WriteRegister(STATUS, StatusReg, RetStatus);
     return Ret;
 }
 
 int NRF_ClearTX_DS(char * RetStatus)
 {
-    int Ret;
-    return Ret;
+	int Ret;
+	char StatusReg;
+	Ret = NRF_ReadRegister(STATUS, &StatusReg, RetStatus);
+	if (Ret < 0)
+		return Ret;
+	StatusReg |= TX_DS;
+	Ret = NRF_WriteRegister(STATUS, StatusReg, RetStatus);
+	return Ret;
 }
 
 int NRF_ClearMAX_RT(char *  RetStatus)
 {
-    int Ret;
-    return Ret;
+	int Ret;
+	char StatusReg;
+	Ret = NRF_ReadRegister(STATUS, &StatusReg, RetStatus);
+	if (Ret < 0)
+		return Ret;
+	StatusReg |= MAX_RT;
+	Ret = NRF_WriteRegister(STATUS, StatusReg, RetStatus);
+	return Ret;
 }
 
 void NRF_DisplayStatus(char Status)
 {
-    int Ret;
-    return Ret;
+	printf("*** STATUS REGISTER ***\n");
+	printf(" RX_DR   : %d\n", (Status & RX_DR)   >> 6);
+	printf(" TX_DS   : %d\n", (Status & TX_DS)   >> 5);
+	printf(" MAX_RT  : %d\n", (Status & MAX_RT)  >> 4);
+	if (((Status & RX_P_NO) >> 1) == 7)
+		printf(" RX_P_NO : EMPTY\n");
+	else
+		printf(" RX_P_NO : %d\n", (Status & RX_P_NO) >> 1);
+	printf(" TX_FULL : %d\n", (Status & TX_FULL));
+	printf("***********************\n");
 }
 
 int NRF_SetAutoRetransmitDelay(int Delay, char * RetStatus)
@@ -238,13 +264,13 @@ int NRF_SetAddressWidth(int Width, char * RetStatus)
     return Ret;
 }
 
-int NRF_SetTxAddress(char * Address, char * RetStatus)
+int NRF_SetTxAddress(const char * Address, char * RetStatus)
 {
     int Ret;
     return Ret;
 }
 
-int NRF_SetRxAddress(DataPipe DPipe, char * Address, char * RetStatus)
+int NRF_SetRxAddress(DataPipe DPipe, const char * Address, char * RetStatus)
 {
     int Ret;
     return Ret;

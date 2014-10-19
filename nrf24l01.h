@@ -93,19 +93,19 @@
 #else
 #define RF_DR   			BIT3
 #endif
-#define RF_PWR				BIT2 | BIT1
+#define RF_PWR				(BIT2 | BIT1)
 #define LNA_HCURR			BIT0
 
 // STATUS
 #define RX_DR				BIT6
 #define TX_DS				BIT5
 #define MAX_RT				BIT4
-#define RX_P_NO				BIT3 | BIT2 | BIT1
+#define RX_P_NO				(BIT3 | BIT2 | BIT1)
 #define TX_FULL				BIT0
 
 // OBSERVE_TX
-#define PLOS_CNT			BIT7 | BIT6 | BIT5 | BIT4
-#define ARC_CNT				BIT3 | BIT2 | BIT1 | BIT0
+#define PLOS_CNT			(BIT7 | BIT6 | BIT5 | BIT4)
+#define ARC_CNT				(BIT3 | BIT2 | BIT1 | BIT0)
 
 // FIFO_STATUS
 #define TX_REUSE			BIT6

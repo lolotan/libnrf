@@ -80,8 +80,8 @@ int NRF_GetLostPacketsCount(int *, char *);
 int NRF_GetLostRetriesCount(int *, char *);
 
 int NRF_SetAddressWidth(int, char *);
-int NRF_SetTxAddress(char *, char *);
-int NRF_SetRxAddress(DataPipe, char *, char *);
+int NRF_SetTxAddress(const char *, char *);
+int NRF_SetRxAddress(DataPipe, const char *, char *);
 int NRF_EnableDataPipe(DataPipe, char *);
 int NRF_SetDataPipeLength(DataPipe, int, char *);
 
