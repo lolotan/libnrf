@@ -25,9 +25,24 @@ int NRF_GetStatus(char * RetStatus)
 	return SPI_SendCommand(NOP, RetStatus);
 }
 
-int NRF_SendCommand(char Command, char * RetStatus)
+int NRF_FlushTX(char * RetStatus)
 {
-    return SPI_SendCommand(Command, RetStatus);
+	return SPI_SendCommand(FLUSH_TX, RetStatus);
+}
+
+int NRF_FlushRX(char * RetStatus)
+{
+	return SPI_SendCommand(FLUSH_RX, RetStatus);
+}
+
+int NRF_ReuseTX_PL(char * RetStatus)
+{
+	return SPI_SendCommand(REUSE_TX_PL, RetStatus);
+}
+
+int NRF_ReadRXPLWidth(int * Width, char * RetStatus)
+{
+	return SPI_CommandRead(R_RX_PL_WID, (char *)Width, 1, RetStatus);
 }
 
 int NRF_ReadRegisterMB(char Register, char * ReadBuffer, int Length, char * RetStatus)
@@ -53,6 +68,16 @@ int NRF_WriteRegister(char Register, char RegisterValue, char * RetStatus)
 int NRF_WriteTXPayload(char * TXPayload, int Length, char * RetStatus)
 {
     return SPI_CommandWrite(W_TX_PAYLOAD, TXPayload, Length, RetStatus);
+}
+
+int NRF_WriteACKPayload(char * TXPayload, DataPipe Pipe, int Length, char * RetStatus)
+{
+    return SPI_CommandWrite((W_ACK_PAYLOAD | Pipe), TXPayload, Length, RetStatus);
+}
+
+int NRF_WritePayloadNOACK(char * TXPayload, int Length, char * RetStatus)
+{
+    return SPI_CommandWrite(W_TX_PAYLOAD_NOACK, TXPayload, Length, RetStatus);
 }
 
 int NRF_ReadRXPayload(char * RXPayload, int Length, char * RetStatus)
@@ -288,14 +313,19 @@ int NRF_SetDataPipeLength(DataPipe DPipe, int Length, char * RetStatus)
     return Ret;
 }
 
-int NRF_StartRX(void)
+void NRF_StartRX(void)
 {
+	GPIO_SetCE(GPIO_ON);
 }
 
-int RRF_StopRX(void)
+void RRF_StopRX(void)
 {
+	GPIO_SetCE(GPIO_OFF);
 }
 
-int NRF_TXPayload(void)
+void NRF_TXPayload(void)
 {
+	GPIO_SetCE(GPIO_ON);
+	TIMER_Wait_us(TIME_TX_PULSE);
+	GPIO_SetCE(GPIO_OFF);
 }

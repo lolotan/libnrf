@@ -51,7 +51,10 @@ typedef enum
 
 int NRF_Init(void);
 
-int NRF_SendCommand(char, char *);
+int NRF_FlushTX(char *);
+int NRF_FlushRX(char *);
+int NRF_ReuseTX_PL(char *);
+int NRF_ReadRXPLWidth(int *, char *);
 
 int NRF_ReadRegisterMB(char, char *, int, char *);
 int NRF_ReadRegister(char, char *, char *);
@@ -59,6 +62,8 @@ int NRF_WriteRegisterMB(char, char *, int, char *);
 int NRF_WriteRegister(char, char , char *);
 
 int NRF_WriteTXPayload(char *, int, char *);
+int NRF_WriteACKPayload(char *, DataPipe, int, char *);
+int NRF_WriteTXPayloadNOACK(char *, int, char *);
 int NRF_ReadRXPayload(char *, int, char *);
 
 int NRF_GetStatus(char *);
@@ -85,8 +90,8 @@ int NRF_SetRxAddress(DataPipe, const char *, char *);
 int NRF_EnableDataPipe(DataPipe, char *);
 int NRF_SetDataPipeLength(DataPipe, int, char *);
 
-int NRF_StartRX(void);
-int RRF_StopRX(void);
-int NRF_TXPayload(void);
+void NRF_StartRX(void);
+void RRF_StopRX(void);
+void NRF_TXPayload(void);
 
 

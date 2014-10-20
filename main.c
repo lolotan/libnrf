@@ -69,7 +69,7 @@ int main(void)
 	Ret = NRF_WriteTXPayload(TestBuffer, 32, &Status);
 	NRF_DisplayStatus(Status);
 
-	NRF_SendCommand(FLUSH_TX, &Status);
+	NRF_FlushTX(&Status);
 	printf("Test Flush TX\n");
 	Ret = NRF_WriteTXPayload(TestBuffer, 32, &Status);
 	NRF_DisplayStatus(Status);
