@@ -261,26 +261,34 @@ void NRF_DisplayStatus(char Status)
 
 int NRF_SetAutoRetransmitDelay(int Delay, char * RetStatus)
 {
-    int Ret;
-    return Ret;
+	// ARD
+    return NRF_WriteRegister(SETUP_RETR, (char)((Delay & 0x0F) << 4), RetStatus);
 }
 
 int NRF_SetAutoRetransmitCount(int Count, char * RetStatus)
 {
-    int Ret;
-    return Ret;
+	// ARC
+	return NRF_WriteRegister(SETUP_RETR, (char)(Count & 0x0F), RetStatus);
 }
 
 int NRF_GetLostPacketsCount(int * Count, char * RetStatus)
 {
+	// PLOS_CNT
     int Ret;
+    char ObserveTxReg;
+    Ret = NRF_ReadRegister(OBSERVE_TX, &ObserveTxReg, RetStatus);
+    *Count = (int)((ObserveTxReg & 0xF0) >> 4);
     return Ret;
 }
 
 int NRF_GetLostRetriesCount(int * Count, char * RetStatus)
 {
+	// ARC_CNT
     int Ret;
-    return Ret;
+    char ObserveTxReg;
+	Ret = NRF_ReadRegister(OBSERVE_TX, &ObserveTxReg, RetStatus);
+	*Count = (int)(ObserveTxReg & 0x0F);
+	return Ret;
 }
 
 int NRF_SetAddressWidth(int Width, char * RetStatus)
