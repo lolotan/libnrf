@@ -49,6 +49,9 @@ typedef enum
 #define TIME_TSTBY2A	140		// Standby modes -> TX/RX mode
 #define TIME_TPECE3CSN	5       // CE positive edge to CSN LOW
 
+#define NRF_OK			0
+#define NRF_ERROR		-1
+
 int NRF_Init(void);
 
 int NRF_FlushTX(char *);
@@ -59,7 +62,7 @@ int NRF_ReadRXPLWidth(int *, char *);
 int NRF_ReadRegisterMB(char, char *, int, char *);
 int NRF_ReadRegister(char, char *, char *);
 int NRF_WriteRegisterMB(char, char *, int, char *);
-int NRF_WriteRegister(char, char , char *);
+int NRF_WriteRegister(char, char, char *);
 
 int NRF_WriteTXPayload(char *, int, char *);
 int NRF_WriteACKPayload(char *, DataPipe, int, char *);

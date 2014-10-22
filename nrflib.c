@@ -293,26 +293,81 @@ int NRF_GetLostRetriesCount(int * Count, char * RetStatus)
 
 int NRF_SetAddressWidth(int Width, char * RetStatus)
 {
-    int Ret;
-    return Ret;
+    if ((Width < 3) || (Width > 5))
+    	return NRF_ERROR;
+
+    return NRF_WriteRegister(SETUP_AW, (Width & 0x03), RetStatus);
 }
 
 int NRF_SetTxAddress(const char * Address, char * RetStatus)
 {
-    int Ret;
-    return Ret;
+    return NRF_WriteRegisterMB(TX_ADDR, (char *)Address, 5, RetStatus);
 }
 
 int NRF_SetRxAddress(DataPipe DPipe, const char * Address, char * RetStatus)
 {
-    int Ret;
-    return Ret;
+	char RxPipeAddr;
+
+    switch (DPipe)
+    {
+    case P0:
+    	RxPipeAddr = RX_ADDR_P0;
+    	break;
+    case P1:
+    	RxPipeAddr = RX_ADDR_P1;
+        break;
+    case P2:
+    	RxPipeAddr = RX_ADDR_P2;
+        break;
+    case P3:
+    	RxPipeAddr = RX_ADDR_P3;
+        break;
+    case P4:
+    	RxPipeAddr = RX_ADDR_P4;
+        break;
+    case P5:
+    	RxPipeAddr = RX_ADDR_P5;
+        break;
+    default:
+    	RxPipeAddr = RX_ADDR_P0;
+    }
+
+    return NRF_WriteRegisterMB(RxPipeAddr, (char *)Address, 5, RetStatus);
 }
 
 int NRF_EnableDataPipe(DataPipe DPipe, char * RetStatus)
 {
-    int Ret;
-    return Ret;
+    int  Ret;
+	char EnabledRX;
+
+	Ret = NRF_ReadRegister(EN_RXADDR, &EnabledRX, RetStatus);
+	if (Ret < 0)
+		return Ret;
+
+    switch (DPipe)
+    {
+    case P0:
+    	EnabledRX |= ERX_P0;
+    	break;
+    case P1:
+    	EnabledRX |= ERX_P1;
+        break;
+    case P2:
+    	EnabledRX |= ERX_P2;
+        break;
+    case P3:
+    	EnabledRX |= ERX_P3;
+        break;
+    case P4:
+    	EnabledRX |= ERX_P4;
+        break;
+    case P5:
+    	EnabledRX |= ERX_P5;
+        break;
+    }
+
+
+    return NRF_WriteRegister(EN_RXADDR, EnabledRX, &RetStatus);
 }
 
 int NRF_SetDataPipeLength(DataPipe DPipe, int Length, char * RetStatus)
