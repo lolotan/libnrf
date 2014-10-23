@@ -10,12 +10,12 @@
 
 int main(void)
 {	
-    char TestVal;
     char Status;
+    int  Ret;
     char TestBuffer[32];
-    int Ret;
+    const char * TestStr = "Hello World !";
     
-    memset(TestBuffer, '*', sizeof(TestBuffer));
+    memset(TestBuffer, 0x00, sizeof(TestBuffer));
 
 	printf("*** Test nrf lib ***\n");
     Ret = NRF_Init();
@@ -24,64 +24,30 @@ int main(void)
     Ret = NRF_GetStatus(&Status);
     NRF_DisplayStatus(Status);
 
-    Status = 0x00;
-    TestVal = 0x00;
-    Ret = NRF_WriteRegister(CONFIG, 0x00, &Status);
-    
-    Ret = NRF_ReadRegister(CONFIG, &TestVal, &Status);
-    printf("Read CONFIG register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
-    
     Ret = NRF_SetPowerMode(POWER_ON, &Status);
-    printf("SetPowerMode register : return %d status %.2X\n", Ret, Status);
 
-    Ret = NRF_ReadRegister(CONFIG, &TestVal, &Status);
-    printf("Read CONFIG register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
-
+    Ret = NRF_FlushTX(&Status);
+    Ret = NRF_FlushRX(&Status);
     Ret = NRF_SetModePTX(&Status);
-    printf("SetModePTX register : return %d status %.2X\n", Ret, Status);
 
-    Ret = NRF_ReadRegister(CONFIG, &TestVal, &Status);
-    printf("Read CONFIG register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
-    
-    
-    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, &Status);
-    printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
-    
-    Ret = NRF_SetDataRate(DR2MBPS, &Status);
-    printf("Test Data Rate : return %d status %.2X\n", Ret, Status);
-    
-    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, &Status);
-    printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
+    memcpy(TestBuffer, TestStr, strlen(TestStr));
 
-    
-    Ret = NRF_SetPAControl(PA18DBM, &Status);
-    printf("Test PA Control : return %d status %.2X\n", Ret, Status);
-    
-    Ret = NRF_ReadRegister(RF_SETUP, &TestVal, &Status);
-    printf("Read RF_SETUP register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
-
-    Ret = NRF_WriteTXPayload(TestBuffer, 32, &Status);
+    Ret = NRF_WriteTXPayload(TestBuffer, sizeof(TestBuffer), &Status);
     NRF_DisplayStatus(Status);
-    Ret = NRF_WriteTXPayload(TestBuffer, 32, &Status);
-	NRF_DisplayStatus(Status);
-	Ret = NRF_WriteTXPayload(TestBuffer, 32, &Status);
-	NRF_DisplayStatus(Status);
-	Ret = NRF_WriteTXPayload(TestBuffer, 32, &Status);
-	NRF_DisplayStatus(Status);
 
-	NRF_FlushTX(&Status);
-	printf("Test Flush TX\n");
-	Ret = NRF_WriteTXPayload(TestBuffer, 32, &Status);
-	NRF_DisplayStatus(Status);
-    /*
-    Ret = NRF_ReadRegister(RF_CH, &TestVal, 1, &Status);
-    printf("Read RF_CH register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
-    
-    Ret = NRF_SetRFChannel(3, &Status);
-    printf("Test RF Channel : return %d status %.2X\n", Ret, Status);
-    
-    Ret = NRF_ReadRegister(RF_CH, &TestVal, 1, &Status);
-    printf("Read RF_CH register : return %d value %.2X status %.2X\n", Ret, TestVal, Status);
-	*/
+    NRF_TXPayload();
+
+    Ret = NRF_GetStatus(&Status);
+    NRF_DisplayStatus(Status);
+
+    int PacketCount;
+    Ret = NRF_GetLostPacketsCount(&PacketCount, &Status);
+    printf("Lost Packets count : %d\n", PacketCount);
+
+    Ret = NRF_GetLostRetriesCount(&PacketCount, &Status);
+    printf("Lost Packets retries : %d\n", PacketCount);
+
+    Ret = NRF_SetPowerMode(POWER_OFF, &Status);
+
     return 0;
 }
