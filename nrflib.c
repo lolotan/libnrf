@@ -366,14 +366,36 @@ int NRF_EnableDataPipe(DataPipe DPipe, char * RetStatus)
         break;
     }
 
-
-    return NRF_WriteRegister(EN_RXADDR, EnabledRX, &RetStatus);
+    return NRF_WriteRegister(EN_RXADDR, EnabledRX, RetStatus);
 }
 
 int NRF_SetDataPipeLength(DataPipe DPipe, int Length, char * RetStatus)
 {
-    int Ret;
-    return Ret;
+	char RxPayloadReg;
+
+    switch (DPipe)
+	{
+	case P0:
+		RxPayloadReg = RX_PW_P0;
+		break;
+	case P1:
+		RxPayloadReg = RX_PW_P1;
+		break;
+	case P2:
+		RxPayloadReg = RX_PW_P2;
+		break;
+	case P3:
+		RxPayloadReg = RX_PW_P3;
+		break;
+	case P4:
+		RxPayloadReg = RX_PW_P4;
+		break;
+	case P5:
+		RxPayloadReg = RX_PW_P5;
+		break;
+	}
+
+    return NRF_WriteRegister(RxPayloadReg, (char)(Length & 0x1F), RetStatus);
 }
 
 void NRF_StartRX(void)

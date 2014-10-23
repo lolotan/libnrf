@@ -87,7 +87,7 @@ void GPIO_SetCE(int GPIOState)
 	}
 }
 
-int  GPIO_ReadIRQ(int GPIOVal)
+int  GPIO_ReadIRQ()
 {
 	// TODO
 	int ret = 0;

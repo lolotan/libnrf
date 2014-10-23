@@ -1,5 +1,5 @@
 CC = gcc
-CFLAG = -c -Wall
+CFLAG = -c -Wall -Wextra
 EXECUTABLE = nrftest
 MAIN = main
 
