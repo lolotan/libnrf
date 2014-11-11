@@ -141,16 +141,10 @@ int NRF_SetPowerMode(PowerMode Power, char * RetStatus)
 
 int NRF_SetDataRate(DataRate DataRateValue, char * RetStatus)
 {
-    int Ret;
-    char RFSetup;
-    
-    Ret = NRF_ReadRegister(RF_SETUP, &RFSetup, RetStatus);
-    if (Ret < 0)
-        return Ret;
+    char RFSetup = 0x00;
     
     switch(DataRateValue)
     {
-        #ifdef NRF24L01P
         case DR1MBPS:
             RFSetup &= ~RF_DR_HIGH;
             RFSetup &= ~RF_DR_LOW;
@@ -169,21 +163,8 @@ int NRF_SetDataRate(DataRate DataRateValue, char * RetStatus)
         default:
             RFSetup |= RF_DR_HIGH;
             RFSetup &= ~RF_DR_LOW;
-        #else
-        case DR1MBPS:
-            RFSetup &= ~RF_DR;
-            break;
-            
-        case DR2MBPS:
-            RFSetup |= RF_DR;
-            break;
-        
-        default:
-            RFSetup |= RF_DR;
-        #endif
     }
-    Ret = NRF_WriteRegister(RF_SETUP, RFSetup, RetStatus);
-    return Ret;
+    return NRF_WriteRegister(RF_SETUP, RFSetup, RetStatus);
 }
 
 int NRF_SetRFChannel(int RFChannel, char * RetStatus)
@@ -204,7 +185,7 @@ int NRF_SetPAControl(PACtrl PACtrlValue, char * RetStatus)
         return Ret;
         
     RFSetup &= 0xF9;
-    RFSetup |= ((PACtrlValue << 1) & 0xF9);
+    RFSetup |= ((PACtrlValue << 1) & 0x06);
     Ret = NRF_WriteRegister(RF_SETUP, RFSetup, RetStatus); 
     return Ret;
 }

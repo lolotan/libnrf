@@ -8,9 +8,7 @@ typedef enum
 {
   DR1MBPS,
   DR2MBPS,
- #ifdef NRF24L01P
   DR250KBPS
-#endif  
 } DataRate;
 
 typedef enum
