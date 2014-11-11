@@ -403,7 +403,7 @@ void NRF_StartRX(void)
 	GPIO_SetCE(GPIO_ON);
 }
 
-void RRF_StopRX(void)
+void NRF_StopRX(void)
 {
 	GPIO_SetCE(GPIO_OFF);
 }

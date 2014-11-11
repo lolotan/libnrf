@@ -94,7 +94,7 @@ int NRF_EnableDataPipe(DataPipe, char *);
 int NRF_SetDataPipeLength(DataPipe, int, char *);
 
 void NRF_StartRX(void);
-void RRF_StopRX(void);
+void NRF_StopRX(void);
 void NRF_TXPayload(void);
 
 
