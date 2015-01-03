@@ -48,6 +48,7 @@ void Test_Receive(void)
 	char RegVal;
 	int  Ret;
 	int  DataReceived = 0;
+	int  LoopCounter = 30;
 	char TestBuffer[32];
 
 	printf("RECEIVE TEST\n");
@@ -56,9 +57,12 @@ void Test_Receive(void)
 	Ret = NRF_SetModePRX(&Status);
 	Ret = NRF_ReadRegister(CONFIG, &RegVal, &Status);
 	printf("CONFIG Value : %02X\n", RegVal);
+	RegVal = 0x20;
+	Ret = NRF_WriteRegister(RX_PW_P0, RegVal, &Status);
+	
 	NRF_StartRX();
 
-	while(DataReceived == 0)
+	while ((DataReceived == 0) && (LoopCounter--))
 	{
 		NRF_GetStatus(&Status);
 		NRF_DisplayStatus(Status);
