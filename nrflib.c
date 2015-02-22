@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include "spi.h"
 #include "gpio.h"
 #include "timer.h"
@@ -375,8 +374,11 @@ int NRF_SetDataPipeLength(DataPipe DPipe, int Length, char * RetStatus)
 		RxPayloadReg = RX_PW_P5;
 		break;
 	}
-
-    return NRF_WriteRegister(RxPayloadReg, (char)(Length & 0x1F), RetStatus);
+	
+	if (Length <= 32)
+		return NRF_WriteRegister(RxPayloadReg, (char)Length, RetStatus);
+	else
+		return NRF_ERROR;
 }
 
 void NRF_StartRX(void)

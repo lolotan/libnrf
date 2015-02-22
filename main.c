@@ -58,7 +58,7 @@ void Test_Receive(void)
 	Ret = NRF_ReadRegister(CONFIG, &RegVal, &Status);
 	printf("CONFIG Value : %02X\n", RegVal);
 	RegVal = 0x20;
-	Ret = NRF_WriteRegister(RX_PW_P0, RegVal, &Status);
+	Ret = NRF_SetDataPipeLength(P0, 32, &Status);
 	
 	NRF_StartRX();
 
