@@ -241,14 +241,28 @@ void NRF_DisplayStatus(char Status)
 
 int NRF_SetAutoRetransmitDelay(int Delay, char * RetStatus)
 {
-	// ARD
-    return NRF_WriteRegister(SETUP_RETR, (char)((Delay & 0x0F) << 4), RetStatus);
+    // ARD
+    int  Ret;
+    char Reg;
+    Ret = NRF_ReadRegister(SETUP_RETR, &Reg, RetStatus);
+    if (Ret < 0)
+        return Ret;
+    Reg &=0x0F;
+    Reg |= (char)((Delay & 0x0F) << 4);
+    return NRF_WriteRegister(SETUP_RETR, Reg, RetStatus);
 }
 
 int NRF_SetAutoRetransmitCount(int Count, char * RetStatus)
 {
-	// ARC
-	return NRF_WriteRegister(SETUP_RETR, (char)(Count & 0x0F), RetStatus);
+    // ARC
+    int  Ret;
+    char Reg;
+    Ret = NRF_ReadRegister(SETUP_RETR, &Reg, RetStatus);
+    if (Ret < 0)
+        return Ret;
+    Reg &=0xF0;
+    Reg |= (char)(Count & 0x0F);
+    return NRF_WriteRegister(SETUP_RETR, Reg, RetStatus);
 }
 
 int NRF_GetLostPacketsCount(int * Count, char * RetStatus)
@@ -263,12 +277,12 @@ int NRF_GetLostPacketsCount(int * Count, char * RetStatus)
 
 int NRF_GetLostRetriesCount(int * Count, char * RetStatus)
 {
-	// ARC_CNT
+    // ARC_CNT
     int Ret;
     char ObserveTxReg;
-	Ret = NRF_ReadRegister(OBSERVE_TX, &ObserveTxReg, RetStatus);
-	*Count = (int)(ObserveTxReg & 0x0F);
-	return Ret;
+    Ret = NRF_ReadRegister(OBSERVE_TX, &ObserveTxReg, RetStatus);
+    *Count = (int)(ObserveTxReg & 0x0F);
+    return Ret;
 }
 
 int NRF_SetAddressWidth(int Width, char * RetStatus)
@@ -286,7 +300,7 @@ int NRF_SetTxAddress(const char * Address, char * RetStatus)
 
 int NRF_SetRxAddress(DataPipe DPipe, const char * Address, char * RetStatus)
 {
-	char RxPipeAddr;
+    char RxPipeAddr;
 
     switch (DPipe)
     {
@@ -374,11 +388,8 @@ int NRF_SetDataPipeLength(DataPipe DPipe, int Length, char * RetStatus)
 		RxPayloadReg = RX_PW_P5;
 		break;
 	}
-	
-	if (Length <= 32)
-		return NRF_WriteRegister(RxPayloadReg, (char)Length, RetStatus);
-	else
-		return NRF_ERROR;
+
+    return NRF_WriteRegister(RxPayloadReg, (char)(Length & 0x1F), RetStatus);
 }
 
 void NRF_StartRX(void)
