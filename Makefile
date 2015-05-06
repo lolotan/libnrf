@@ -1,12 +1,19 @@
 CC = gcc
 CFLAG = -c -Wall -Wextra
-EXECUTABLE = nrftest
+PROJECT = nrf
+NRFSTATICLIB=lib$(PROJECT).a
+EXECUTABLE = $(PROJECT)test
 MAIN = main
 
-all: $(EXECUTABLE)
+OBJECTS = nrflib.o spi.o gpio.o timer.o
 
-$(EXECUTABLE): nrflib.o spi.o gpio.o timer.o $(MAIN).o
-	$(CC) spi.o gpio.o timer.o nrflib.o $(MAIN).o -o $(EXECUTABLE)
+all: $(EXECUTABLE) $(NRFSTATICLIB)
+
+$(EXECUTABLE): $(NRFSTATICLIB) $(MAIN).o
+	$(CC) $(MAIN).o -static -L. -lnrf -o $(EXECUTABLE)
+	
+$(NRFSTATICLIB): $(OBJECTS)
+	ar rcs $@ $^
 
 $(MAIN).o: $(MAIN).c
 	$(CC) $(CFLAG) $(MAIN).c
@@ -24,4 +31,4 @@ timer.o: timer.c
 	$(CC) $(CFLAG) timer.c
 	
 clean:
-	rm -rf *.o $(EXECUTABLE)
+	rm -rf *.o *.a $(EXECUTABLE)
