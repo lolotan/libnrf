@@ -4,7 +4,6 @@ PROJECT = nrf
 NRFSTATICLIB=lib$(PROJECT).a
 EXECUTABLE = $(PROJECT)test
 MAIN = main
-
 OBJECTS = nrflib.o spi.o gpio.o timer.o
 
 all: $(EXECUTABLE) $(NRFSTATICLIB)
