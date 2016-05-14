@@ -1,11 +1,10 @@
 /****************************************/
 /* SPI functions header for nrf library */
-/*   Platform dependant - RPI version   */
+/*   Platform dependant SPI functions   */
 /****************************************/
 
-#define SPI_DEVICE 	"/dev/spidev0.0"
 
-int SPI_Init();
-int SPI_SendCommand(char, char *);
-int SPI_CommandWrite(char, char *, int, char *);
-int	SPI_CommandRead(char, char *, int, char *);
+extern int spi_init();
+extern int spi_send_command(char, char *);
+extern int spi_command_write(char, char *, int, char *);
+extern int spi_command_read(char, char *, int, char *);

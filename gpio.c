@@ -9,6 +9,11 @@
 #define BCM2708_PERI_BASE        0x20000000
 #define GPIO_BASE                (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
 
+#define GPIO_ON		1
+#define GPIO_OFF	0
+
+#define GPIO_IRQ	23
+#define GPIO_CE		24
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,7 +40,7 @@ volatile unsigned *gpio;
 #define GPIO_CLR *(gpio+10) // clears bits which are 1 ignores bits which are 0
 
 
-void GPIO_Init(void)
+void gpio_init(void)
 {
 	// Rpi GPIO Setup - from elinux wiki
 	
@@ -70,24 +75,24 @@ void GPIO_Init(void)
 	INP_GPIO(GPIO_CE); 
 	OUT_GPIO(GPIO_CE);
 	
-	GPIO_SetCE(GPIO_OFF);
+	gpio_set_ce(GPIO_OFF);
 }
 
-void GPIO_SetCSN(int GPIOState)
+void gpio_set_csn(int gpiostate)
 {
 	// CSN not needed 
 }
 
-void GPIO_SetCE(int GPIOState)
+void gpio_set_ce(int gpiostate)
 {
-	if (GPIOState == GPIO_ON) {
+	if (gpiostate == GPIO_ON) {
 		GPIO_SET = 1<<GPIO_CE;
 	} else {
 		GPIO_CLR = 1<<GPIO_CE;
 	}
 }
 
-int  GPIO_ReadIRQ()
+int gpio_read_irq()
 {
 	// TODO
 	int ret = 0;

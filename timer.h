@@ -1,6 +1,7 @@
 /*******************************************/
 /* Timing functions header for nrf library */
+/*   Platform dependent timer functions	   */
 /*******************************************/
 
-void TIMER_Init(void);
-void TIMER_Wait_us(int);
+extern void timer_init(void);
+extern void timer_wait_us(int);

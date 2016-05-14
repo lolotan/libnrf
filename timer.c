@@ -16,7 +16,7 @@
 
 void *st_base; // byte ptr to simplify offset math
 
-void TIMER_Init(void)
+void timer_init(void)
 {
 	int fd;
     // get access to system core memory
@@ -34,7 +34,7 @@ void TIMER_Init(void)
 	close(fd); //No need to keep fd open after mmap
 }
 
-void TIMER_RPI_Timer(int usvalue)
+void timer_rpi_timer(int usvalue)
 {
 	long long int *timer;
 	long long int start;
@@ -44,10 +44,11 @@ void TIMER_RPI_Timer(int usvalue)
 	while (*timer - start < usvalue);
 }
 
-void TIMER_Wait_us(int usvalue)
+void timer_wait_us(int usvalue)
 {
-	if (usvalue < 100)
-		TIMER_RPI_Timer(usvalue);	// Special system timer sleep
-	else
+	if (usvalue < 100) {
+		timer_rpi_timer(usvalue);	// Special system timer sleep
+	} else {
 		usleep(usvalue);			// Linux usleep standard function
+	}
 }

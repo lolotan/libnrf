@@ -13,6 +13,8 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 
+#define SPI_DEVICE 	"/dev/spidev0.0"
+
 // Global SPI setup variables
 static int 		fd;
 static uint8_t 	spi_bits;
@@ -22,9 +24,9 @@ static uint16_t spi_delay;
 // SPI Initialisation function
 // Configure the SPI interface according to the nrf specs
 // MSBit to LSBit / LSByte to MSByte / 8 bit command set / 0-8Mbps
-int  SPI_Init()
+int  spi_init()
 {
-	int          Ret;	
+	int          ret;	
 	uint8_t      spi_mode;
 	const char * spi_device = SPI_DEVICE;
 	
@@ -34,77 +36,77 @@ int  SPI_Init()
 	spi_mode  = 0;
 	
 	fd = open(spi_device, O_RDWR);	
-	Ret = ioctl(fd, SPI_IOC_WR_MODE, &spi_mode);	
-	Ret = ioctl(fd, SPI_IOC_RD_MODE, &spi_mode);	
-	Ret = ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &spi_bits);	
-	Ret = ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &spi_bits);
-	Ret = ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &spi_speed);
-	Ret = ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &spi_speed);
+	ret = ioctl(fd, SPI_IOC_WR_MODE, &spi_mode);	
+	ret = ioctl(fd, SPI_IOC_RD_MODE, &spi_mode);	
+	ret = ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &spi_bits);	
+	ret = ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &spi_bits);
+	ret = ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &spi_speed);
+	ret = ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &spi_speed);
 	
-	return Ret;
+	return ret;
 }
 
 
-int SPI_SendCommand(char Command, char * RetStatus)
+int spi_send_command(char command, char * retstatus)
 {
-    int Ret;
+    int ret;
 	struct spi_ioc_transfer tr = {
-		.tx_buf = (unsigned long)&Command,
-		.rx_buf = (unsigned long)RetStatus,
+		.tx_buf = (unsigned long)&command,
+		.rx_buf = (unsigned long)retstatus,
 		.len = 1,
 		.delay_usecs = spi_delay,
 		.speed_hz = spi_speed,
 		.bits_per_word = spi_bits,
 	};
-    Ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
-	return Ret;
+    ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
+	return ret;
 }
 
 
-int SPI_CommandWrite(char Command, char * WriteBuffer, int Length, char * RetStatus)
+int spi_command_write(char command, char * writebuffer, int length, char * retstatus)
 {
-    int Ret;
+    int ret;
 	struct spi_ioc_transfer SpiCtrl[2];
-    memset(SpiCtrl, 0x00, sizeof(SpiCtrl));
+    memset(spictrl, 0x00, sizeof(spictrl));
 	// Command Struct
-	SpiCtrl[0].tx_buf = (unsigned long)&Command;
-	SpiCtrl[0].rx_buf = (unsigned long)RetStatus;
-	SpiCtrl[0].len = 1;
-	SpiCtrl[0].delay_usecs = spi_delay;
-	SpiCtrl[0].speed_hz = spi_speed;
-	SpiCtrl[0].bits_per_word = spi_bits;
+	spictrl[0].tx_buf = (unsigned long)&command;
+	spictrl[0].rx_buf = (unsigned long)retstatus;
+	spictrl[0].len = 1;
+	spictrl[0].delay_usecs = spi_delay;
+	spictrl[0].speed_hz = spi_speed;
+	spictrl[0].bits_per_word = spi_bits;
 	
 	// Data Struct
-	SpiCtrl[1].tx_buf = (unsigned long)WriteBuffer;
-	SpiCtrl[1].rx_buf = (unsigned long)NULL;
-	SpiCtrl[1].len = Length;
-	SpiCtrl[1].delay_usecs = spi_delay;
-	SpiCtrl[1].speed_hz = spi_speed;
-	SpiCtrl[1].bits_per_word = spi_bits;
-	Ret = ioctl(fd, SPI_IOC_MESSAGE(2), &SpiCtrl);
-	return Ret;
+	spictrl[1].tx_buf = (unsigned long)writebuffer;
+	spictrl[1].rx_buf = (unsigned long)NULL;
+	spictrl[1].len = length;
+	spictrl[1].delay_usecs = spi_delay;
+	spictrl[1].speed_hz = spi_speed;
+	spictrl[1].bits_per_word = spi_bits;
+	ret = ioctl(fd, SPI_IOC_MESSAGE(2), &spictrl);
+	return ret;
 }
 
-int	SPI_CommandRead(char Command, char * ReadBuffer, int Length, char * RetStatus)
+int	spi_command_read(char command, char * readbuffer, int length, char * retstatus)
 {
-    int Ret;
-    struct spi_ioc_transfer SpiCtrl[2];
-    memset(SpiCtrl, 0x00, sizeof(SpiCtrl));
+    int ret;
+    struct spi_ioc_transfer spictrl[2];
+    memset(spictrl, 0x00, sizeof(spictrl));
 	// Command Struct
-	SpiCtrl[0].tx_buf = (unsigned long)&Command;
-	SpiCtrl[0].rx_buf = (unsigned long)RetStatus;
-	SpiCtrl[0].len = 1;
-	SpiCtrl[0].delay_usecs = spi_delay;
-	SpiCtrl[0].speed_hz = spi_speed;
-	SpiCtrl[0].bits_per_word = spi_bits;
+	spictrl[0].tx_buf = (unsigned long)&command;
+	spictrl[0].rx_buf = (unsigned long)retstatus;
+	spictrl[0].len = 1;
+	spictrl[0].delay_usecs = spi_delay;
+	spictrl[0].speed_hz = spi_speed;
+	spictrl[0].bits_per_word = spi_bits;
 	
     // Data Struct
-	SpiCtrl[1].tx_buf = (unsigned long)NULL;
-	SpiCtrl[1].rx_buf = (unsigned long)ReadBuffer;
-	SpiCtrl[1].len = Length;
-	SpiCtrl[1].delay_usecs = spi_delay;
-	SpiCtrl[1].speed_hz = spi_speed;
-	SpiCtrl[1].bits_per_word = spi_bits;
-	Ret = ioctl(fd, SPI_IOC_MESSAGE(2), &SpiCtrl);
-	return Ret;
+	spictrl[1].tx_buf = (unsigned long)NULL;
+	spictrl[1].rx_buf = (unsigned long)readbuffer;
+	spictrl[1].len = length;
+	spictrl[1].delay_usecs = spi_delay;
+	spictrl[1].speed_hz = spi_speed;
+	spictrl[1].bits_per_word = spi_bits;
+	ret = ioctl(fd, SPI_IOC_MESSAGE(2), &spictrl);
+	return ret;
 }

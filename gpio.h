@@ -1,15 +1,11 @@
 /*****************************************/
 /* GPIO functions header for nrf library */
-/*    Platform dependant - RPI version   */
+/*   Platform dependent GPIO functions   */
 /*****************************************/
 
-#define GPIO_ON		1
-#define GPIO_OFF	0
 
-#define GPIO_IRQ	23
-#define GPIO_CE		24
 
-void GPIO_Init(void);
-void GPIO_SetCSN(int);
-void GPIO_SetCE(int);
-int  GPIO_ReadIRQ(void);
+extern void gpio_init(void);
+extern void gpio_set_csn(int);
+extern void gpio_set_ce(int);
+extern int  gpio_read_irq(void);
