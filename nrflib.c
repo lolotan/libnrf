@@ -10,222 +10,222 @@
 #include "timer.h"
 #include "nrflib.h"
 
-int NRF_Init(void)
+int nrf_init(void)
 {
 	int ret = -1;
-	GPIO_Init();
-	TIMER_Init();
-	ret = SPI_Init();
+	gpio_init();
+	timer_init();
+	ret = spi_init();
 	return ret;
 }
 
-int NRF_GetStatus(char * RetStatus)
+int nrf_get_status(char * retstatus)
 {
-	return SPI_SendCommand(NOP, RetStatus);
+	return spi_send_command(NOP, retstatus);
 }
 
-int NRF_FlushTX(char * RetStatus)
+int nrf_flush_tX(char * retstatus)
 {
-	return SPI_SendCommand(FLUSH_TX, RetStatus);
+	return spi_send_command(FLUSH_TX, retstatus);
 }
 
-int NRF_FlushRX(char * RetStatus)
+int nrf_flush_rx(char * retstatus)
 {
-	return SPI_SendCommand(FLUSH_RX, RetStatus);
+	return spi_send_command(FLUSH_RX, retstatus);
 }
 
-int NRF_ReuseTX_PL(char * RetStatus)
+int nrf_reuse_tx_pl(char * retstatus)
 {
-	return SPI_SendCommand(REUSE_TX_PL, RetStatus);
+	return spi_send_command(REUSE_TX_PL, retstatus);
 }
 
-int NRF_ReadRXPLWidth(int * Width, char * RetStatus)
+int nrf_read_rx_pl_width(int * width, char * retstatus)
 {
-	return SPI_CommandRead(R_RX_PL_WID, (char *)Width, 1, RetStatus);
+	return spi_command_read(R_RX_PL_WID, (char *)width, 1, retstatus);
 }
 
-int NRF_ReadRegisterMB(char Register, char * ReadBuffer, int Length, char * RetStatus)
+int nrf_read_register_mb(char reg, char * readbuffer, int length, char * retstatus)
 {
-    return SPI_CommandRead((Register | R_REGISTER), ReadBuffer, Length, RetStatus);
+    return spi_command_read((reg | R_REGISTER), readbuffer, length, retstatus);
 }
 
-int NRF_ReadRegister(char Register, char * RegisterValue, char * RetStatus)
+int nrf_read_register(char reg, char * regValue, char * retstatus)
 {
-    return SPI_CommandRead((Register | R_REGISTER), RegisterValue, 1, RetStatus);
+    return spi_command_read((reg | R_REGISTER), regval, 1, retstatus);
 }
 
-int NRF_WriteRegisterMB(char Register, char * WriteBuffer, int Length, char * RetStatus)
+int nrf_write_register_mb(char reg, char * writebuffer, int length, char * retstatus)
 {
-    return SPI_CommandWrite((Register | W_REGISTER), WriteBuffer, Length, RetStatus);
+    return spi_command_write((reg | W_REGISTER), writebuffer, length, retstatus);
 }
 
-int NRF_WriteRegister(char Register, char RegisterValue, char * RetStatus)
+int nrf_write_register(char reg, char regval, char * retstatus)
 {
-    return SPI_CommandWrite((Register | W_REGISTER), &RegisterValue, 1, RetStatus);
+    return spi_command_write((reg | W_REGISTER), &regval, 1, retstatus);
 }
 
-int NRF_WriteTXPayload(char * TXPayload, int Length, char * RetStatus)
+int nrf_write_tx_payload(char * txpayload, int length, char * retstatus)
 {
-    return SPI_CommandWrite(W_TX_PAYLOAD, TXPayload, Length, RetStatus);
+    return spi_command_write(W_TX_PAYLOAD, txpayload, length, retstatus);
 }
 
-int NRF_WriteACKPayload(char * TXPayload, DataPipe Pipe, int Length, char * RetStatus)
+int nrf_write_ack_payload(char * txpayload, datapipe_t Pipe, int length, char * retstatus)
 {
-    return SPI_CommandWrite((W_ACK_PAYLOAD | Pipe), TXPayload, Length, RetStatus);
+    return spi_command_write((W_ACK_PAYLOAD | Pipe), txpayload, length, retstatus);
 }
 
-int NRF_WritePayloadNOACK(char * TXPayload, int Length, char * RetStatus)
+int nrf_write_tx_payload_noack(char * txpayload, int length, char * retstatus)
 {
-    return SPI_CommandWrite(W_TX_PAYLOAD_NOACK, TXPayload, Length, RetStatus);
+    return spi_command_write(W_TX_PAYLOAD_NOACK, txpayload, length, retstatus);
 }
 
-int NRF_ReadRXPayload(char * RXPayload, int Length, char * RetStatus)
+int nrf_read_rx_payload(char * rxpayload, int length, char * retstatus)
 {
-    return SPI_CommandRead(R_RX_PAYLOAD, RXPayload, Length, RetStatus);
+    return spi_command_read(R_RX_PAYLOAD, rxpayload, length, retstatus);
 }
 
-int NRF_SetModePRX(char * RetStatus)
+int nrf_set_mode_prx(char * retstatus)
 {
-    char ConfigRegister = 0;
-    int Ret;
+    char confreg = 0;
+    int ret;
     
-    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, RetStatus);
-    if (Ret < 0)
-        return Ret;
+    ret = nrf_read_register(CONFIG, &confreg, retstatus);
+    if (ret < 0)
+        return ret;
     
-    ConfigRegister |= PRIM_RX;      // Set PRX Mode with PRIM_RX = 1
+    confreg |= PRIM_RX;      // Set PRX Mode with PRIM_RX = 1
     
-    Ret = NRF_WriteRegister(CONFIG, ConfigRegister, RetStatus);
+    ret = nrf_write_register(CONFIG, confreg, retstatus);
     
-    TIMER_Wait_us(TIME_TSTBY2A);    // Wait Tstby2a time
-    return Ret;
+    timer_wait_us(TIME_TSTBY2A);    // Wait Tstby2a time
+    return ret;
 }
 
-int NRF_SetModePTX(char * RetStatus)
+int nrf_set_mode_ptx(char * retstatus)
 {
-    char ConfigRegister;
-    int Ret;
+    char confreg;
+    int ret;
     
-    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, RetStatus);
-    if (Ret < 0)
-        return Ret;
+    ret = nrf_read_register(CONFIG, &confreg, retstatus);
+    if (ret < 0)
+        return ret;
 
-    ConfigRegister &= ~PRIM_RX ;    // Set PTX Mode with PRIM_RX = 0
+    confreg &= ~PRIM_RX ;    // Set PTX Mode with PRIM_RX = 0
     
-    Ret = NRF_WriteRegister(CONFIG, ConfigRegister, RetStatus);
+    ret = nrf_write_register(CONFIG, confreg, retstatus);
     
-    TIMER_Wait_us(TIME_TSTBY2A);    // Wait Tstby2a time
-    return Ret;
+    timer_wait_us(TIME_TSTBY2A);    // Wait Tstby2a time
+    return ret;
 }
 
-int NRF_SetPowerMode(PowerMode Power, char * RetStatus)
+int nrf_set_power_mode(powermode_t Power, char * retstatus)
 {
-    char ConfigRegister;
-    int Ret;
+    char confreg;
+    int ret;
 
-    Ret = NRF_ReadRegister(CONFIG, &ConfigRegister, RetStatus);
-    if (Ret < 0)
-        return Ret;
+    ret = nrf_read_register(CONFIG, &confreg, retstatus);
+    if (ret < 0)
+        return ret;
         
     if (Power == POWER_OFF)
-        ConfigRegister &= ~PWR_UP;  // PWR_UP = 0
+        confreg &= ~PWR_UP;  // PWR_UP = 0
     else
-        ConfigRegister |= PWR_UP;   // PWR_UP = 1
+        confreg |= PWR_UP;   // PWR_UP = 1
     
-    Ret = NRF_WriteRegister(CONFIG, ConfigRegister, RetStatus);
+    ret = nrf_write_register(CONFIG, confreg, retstatus);
     
-    TIMER_Wait_us(TIME_TPD2STBY);   // Wait Tpd2stby time
-    return Ret;
+    timer_wait_us(TIME_TPD2STBY);   // Wait Tpd2stby time
+    return ret;
 }
 
-int NRF_SetDataRate(DataRate DataRateValue, char * RetStatus)
+int nrf_set_data_rate(datarate_t datarateval, char * retstatus)
 {
-    char RFSetup = 0x00;
+    char rfsetup = 0x00;
     
-    switch(DataRateValue)
+    switch(datarateval)
     {
         case DR1MBPS:
-            RFSetup &= ~RF_DR_HIGH;
-            RFSetup &= ~RF_DR_LOW;
+            rfsetup &= ~RF_DR_HIGH;
+            rfsetup &= ~RF_DR_LOW;
             break;
             
         case DR2MBPS:
-            RFSetup |= RF_DR_HIGH;
-            RFSetup &= ~RF_DR_LOW;
+            rfsetup |= RF_DR_HIGH;
+            rfsetup &= ~RF_DR_LOW;
             break;
                     
         case DR250KBPS:
-            RFSetup &= ~RF_DR_HIGH;
-            RFSetup |= RF_DR_LOW;
+            rfsetup &= ~RF_DR_HIGH;
+            rfsetup |= RF_DR_LOW;
             break;
         
         default:
-            RFSetup |= RF_DR_HIGH;
-            RFSetup &= ~RF_DR_LOW;
+            rfsetup |= RF_DR_HIGH;
+            rfsetup &= ~RF_DR_LOW;
     }
-    return NRF_WriteRegister(RF_SETUP, RFSetup, RetStatus);
+    return nrf_write_register(RF_SETUP, rfsetup, retstatus);
 }
 
-int NRF_SetRFChannel(int RFChannel, char * RetStatus)
+int nrf_set_rf_channel(int rfchannel, char * retstatus)
 {
-    int Ret;
-    RFChannel &= 0x7F;
-    Ret = NRF_WriteRegister(RF_CH, (char)RFChannel, RetStatus);
-    return Ret;
+    int ret;
+    rfchannel &= 0x7F;
+    ret = nrf_write_register(RF_CH, (char)rfchannel, retstatus);
+    return ret;
 }
 
-int NRF_SetPAControl(PACtrl PACtrlValue, char * RetStatus)
+int nrf_set_pa_control(pactrl_t pactrlval, char * retstatus)
 {
-    int Ret;
-    char RFSetup;
+    int ret;
+    char rfsetup;
     
-    Ret = NRF_ReadRegister(RF_SETUP, &RFSetup, RetStatus);
-    if (Ret < 0)
-        return Ret;
+    ret = nrf_read_register(RF_SETUP, &rfsetup, retstatus);
+    if (ret < 0)
+        return ret;
         
-    RFSetup &= 0xF9;
-    RFSetup |= ((PACtrlValue << 1) & 0x06);
-    Ret = NRF_WriteRegister(RF_SETUP, RFSetup, RetStatus); 
-    return Ret;
+    rfsetup &= 0xF9;
+    rfsetup |= ((pactrlval << 1) & 0x06);
+    ret = nrf_write_register(RF_SETUP, rfsetup, retstatus); 
+    return ret;
 }
 
-int NRF_ClearRX_DR(char * RetStatus)
+int nrf_clear_rx_dr(char * retstatus)
 {
-    int Ret;
-    char StatusReg;
-    Ret = NRF_ReadRegister(STATUS, &StatusReg, RetStatus);
-    if (Ret < 0)
-        return Ret;
-    StatusReg |= RX_DR;
-    Ret = NRF_WriteRegister(STATUS, StatusReg, RetStatus);
-    return Ret;
+    int ret;
+    char statusreg;
+    ret = nrf_read_register(STATUS, &statusreg, retstatus);
+    if (ret < 0)
+        return ret;
+    statusreg |= RX_DR;
+    ret = nrf_write_register(STATUS, statusreg, retstatus);
+    return ret;
 }
 
-int NRF_ClearTX_DS(char * RetStatus)
+int nrf_clear_tx_ds(char * retstatus)
 {
-	int Ret;
-	char StatusReg;
-	Ret = NRF_ReadRegister(STATUS, &StatusReg, RetStatus);
-	if (Ret < 0)
-		return Ret;
-	StatusReg |= TX_DS;
-	Ret = NRF_WriteRegister(STATUS, StatusReg, RetStatus);
-	return Ret;
+	int ret;
+	char statusreg;
+	ret = nrf_read_register(STATUS, &statusreg, retstatus);
+	if (ret < 0)
+		return ret;
+	statusreg |= TX_DS;
+	ret = nrf_write_register(STATUS, statusreg, retstatus);
+	return ret;
 }
 
-int NRF_ClearMAX_RT(char *  RetStatus)
+int nrf_clear_max_rt(char *  retstatus)
 {
-	int Ret;
-	char StatusReg;
-	Ret = NRF_ReadRegister(STATUS, &StatusReg, RetStatus);
-	if (Ret < 0)
-		return Ret;
-	StatusReg |= MAX_RT;
-	Ret = NRF_WriteRegister(STATUS, StatusReg, RetStatus);
-	return Ret;
+	int ret;
+	char statusreg;
+	ret = nrf_read_register(STATUS, &statusreg, retstatus);
+	if (ret < 0)
+		return ret;
+	statusreg |= MAX_RT;
+	ret = nrf_write_register(STATUS, statusreg, retstatus);
+	return ret;
 }
 
-void NRF_DisplayStatus(char Status)
+void nrf_display_status(char Status)
 {
 	printf("*** STATUS REGISTER ***\n");
 	printf(" RX_DR   : %d\n", (Status & RX_DR)   >> 6);
@@ -239,172 +239,172 @@ void NRF_DisplayStatus(char Status)
 	printf("***********************\n");
 }
 
-int NRF_SetAutoRetransmitDelay(int Delay, char * RetStatus)
+int nrf_set_auto_retransmit_delay(int Delay, char * retstatus)
 {
     // ARD
-    int  Ret;
+    int  ret;
     char Reg;
-    Ret = NRF_ReadRegister(SETUP_RETR, &Reg, RetStatus);
-    if (Ret < 0)
-        return Ret;
+    ret = nrf_read_register(SETUP_RETR, &Reg, retstatus);
+    if (ret < 0)
+        return ret;
     Reg &=0x0F;
     Reg |= (char)((Delay & 0x0F) << 4);
-    return NRF_WriteRegister(SETUP_RETR, Reg, RetStatus);
+    return nrf_write_register(SETUP_RETR, reg, retstatus);
 }
 
-int NRF_SetAutoRetransmitCount(int Count, char * RetStatus)
+int nrf_set_auto_retransmit_count(int count, char * retstatus)
 {
     // ARC
-    int  Ret;
-    char Reg;
-    Ret = NRF_ReadRegister(SETUP_RETR, &Reg, RetStatus);
-    if (Ret < 0)
-        return Ret;
-    Reg &=0xF0;
-    Reg |= (char)(Count & 0x0F);
-    return NRF_WriteRegister(SETUP_RETR, Reg, RetStatus);
+    int  ret;
+    char reg;
+    ret = nrf_read_register(SETUP_RETR, &reg, retstatus);
+    if (ret < 0)
+        return ret;
+    reg &=0xF0;
+    reg |= (char)(count & 0x0F);
+    return nrf_write_register(SETUP_RETR, reg, retstatus);
 }
 
-int NRF_GetLostPacketsCount(int * Count, char * RetStatus)
+int nrf_get_lost_packets_count(int * count, char * retstatus)
 {
 	// PLOS_CNT
-    int Ret;
-    char ObserveTxReg;
-    Ret = NRF_ReadRegister(OBSERVE_TX, &ObserveTxReg, RetStatus);
-    *Count = (int)((ObserveTxReg & 0xF0) >> 4);
-    return Ret;
+    int ret;
+    char obstxreg;
+    ret = nrf_read_register(OBSERVE_TX, &obstxreg, retstatus);
+    *count = (int)((obstxreg & 0xF0) >> 4);
+    return ret;
 }
 
-int NRF_GetLostRetriesCount(int * Count, char * RetStatus)
+int nrf_get_lost_retries_count(int * count, char * retstatus)
 {
     // ARC_CNT
-    int Ret;
-    char ObserveTxReg;
-    Ret = NRF_ReadRegister(OBSERVE_TX, &ObserveTxReg, RetStatus);
-    *Count = (int)(ObserveTxReg & 0x0F);
-    return Ret;
+    int ret;
+    char obstxreg;
+    ret = nrf_read_register(OBSERVE_TX, &obstxreg, retstatus);
+    *count = (int)(obstxreg & 0x0F);
+    return ret;
 }
 
-int NRF_SetAddressWidth(int Width, char * RetStatus)
+int nrf_set_address_width(int width, char * retstatus)
 {
-    if ((Width < 3) || (Width > 5))
-    	return NRF_ERROR;
+    if ((width < 3) || (width > 5))
+    	return nrf_ERROR;
 
-    return NRF_WriteRegister(SETUP_AW, (Width & 0x03), RetStatus);
+    return nrf_write_register(SETUP_AW, (width & 0x03), retstatus);
 }
 
-int NRF_SetTxAddress(const char * Address, char * RetStatus)
+int nrf_set_tx_address(const char * address, char * retstatus)
 {
-    return NRF_WriteRegisterMB(TX_ADDR, (char *)Address, 5, RetStatus);
+    return nrf_write_registerMB(TX_ADDR, (char *)address, 5, retstatus);
 }
 
-int NRF_SetRxAddress(DataPipe DPipe, const char * Address, char * RetStatus)
+int nrf_set_rx_address(datapipe_t datapipe, const char * address, char * retstatus)
 {
-    char RxPipeAddr;
+    char rxpipeaddr;
 
-    switch (DPipe)
+    switch (datapipe)
     {
     case P0:
-    	RxPipeAddr = RX_ADDR_P0;
+    	rxpipeaddr = RX_ADDR_P0;
     	break;
     case P1:
-    	RxPipeAddr = RX_ADDR_P1;
+    	rxpipeaddr = RX_ADDR_P1;
         break;
     case P2:
-    	RxPipeAddr = RX_ADDR_P2;
+    	rxpipeaddr = RX_ADDR_P2;
         break;
     case P3:
-    	RxPipeAddr = RX_ADDR_P3;
+    	rxpipeaddr = RX_ADDR_P3;
         break;
     case P4:
-    	RxPipeAddr = RX_ADDR_P4;
+    	rxpipeaddr = RX_ADDR_P4;
         break;
     case P5:
-    	RxPipeAddr = RX_ADDR_P5;
+    	rxpipeaddr = RX_ADDR_P5;
         break;
     default:
-    	RxPipeAddr = RX_ADDR_P0;
+    	rxpipeaddr = RX_ADDR_P0;
     }
 
-    return NRF_WriteRegisterMB(RxPipeAddr, (char *)Address, 5, RetStatus);
+    return nrf_write_registerMB(rxpipeaddr, (char *)address, 5, retstatus);
 }
 
-int NRF_EnableDataPipe(DataPipe DPipe, char * RetStatus)
+int nrf_enable_datapipe(datapipe_t datapipe, char * retstatus)
 {
-    int  Ret;
-	char EnabledRX;
+    int  ret;
+	char enabledrx;
 
-	Ret = NRF_ReadRegister(EN_RXADDR, &EnabledRX, RetStatus);
-	if (Ret < 0)
-		return Ret;
+	ret = nrf_read_register(EN_RXADDR, &enabledrx, retstatus);
+	if (ret < 0)
+		return ret;
 
-    switch (DPipe)
+    switch (datapipe)
     {
     case P0:
-    	EnabledRX |= ERX_P0;
+    	enabledrx |= ERX_P0;
     	break;
     case P1:
-    	EnabledRX |= ERX_P1;
+    	enabledrx |= ERX_P1;
         break;
     case P2:
-    	EnabledRX |= ERX_P2;
+    	enabledrx |= ERX_P2;
         break;
     case P3:
-    	EnabledRX |= ERX_P3;
+    	enabledrx |= ERX_P3;
         break;
     case P4:
-    	EnabledRX |= ERX_P4;
+    	enabledrx |= ERX_P4;
         break;
     case P5:
-    	EnabledRX |= ERX_P5;
+    	enabledrx |= ERX_P5;
         break;
     }
 
-    return NRF_WriteRegister(EN_RXADDR, EnabledRX, RetStatus);
+    return nrf_write_register(EN_RXADDR, enabledrx, retstatus);
 }
 
-int NRF_SetDataPipeLength(DataPipe DPipe, int Length, char * RetStatus)
+int nrf_set_datapipe_length(datapipe_t datapipe, int length, char * retstatus)
 {
-	char RxPayloadReg;
+	char rxplreg;
 
-    switch (DPipe)
+    switch (datapipe)
 	{
 	case P0:
-		RxPayloadReg = RX_PW_P0;
+		rxplreg = RX_PW_P0;
 		break;
 	case P1:
-		RxPayloadReg = RX_PW_P1;
+		rxplreg = RX_PW_P1;
 		break;
 	case P2:
-		RxPayloadReg = RX_PW_P2;
+		rxplreg = RX_PW_P2;
 		break;
 	case P3:
-		RxPayloadReg = RX_PW_P3;
+		rxplreg = RX_PW_P3;
 		break;
 	case P4:
-		RxPayloadReg = RX_PW_P4;
+		rxplreg = RX_PW_P4;
 		break;
 	case P5:
-		RxPayloadReg = RX_PW_P5;
+		rxplreg = RX_PW_P5;
 		break;
 	}
 
-    return NRF_WriteRegister(RxPayloadReg, (char)(Length & 0x1F), RetStatus);
+    return nrf_write_register(rxplreg, (char)(length & 0x1F), retstatus);
 }
 
-void NRF_StartRX(void)
+void nrf_start_rx(void)
 {
-	GPIO_SetCE(GPIO_ON);
+	gpio_set_ce(GPIO_ON);
 }
 
-void NRF_StopRX(void)
+void nrf_stop_rx(void)
 {
-	GPIO_SetCE(GPIO_OFF);
+	gpio_set_ce(GPIO_OFF);
 }
 
-void NRF_TXPayload(void)
+void nrf_tx_payload(void)
 {
-	GPIO_SetCE(GPIO_ON);
-	TIMER_Wait_us(TIME_TX_PULSE);
-	GPIO_SetCE(GPIO_OFF);
+	gpio_set_ce(GPIO_ON);
+	timer_wait_us(TIME_TX_PULSE);
+	gpio_set_ce(GPIO_OFF);
 }
