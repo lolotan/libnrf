@@ -1,5 +1,6 @@
-CC = gcc
-CFLAG = -c -Wall -Wextra
+CC = /home/laurent/devel/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin/arm-linux-gnueabihf-cc
+CFLAG = -I/home/laurent/devel/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/sysroot/usr/include -c -Wall -Wextra
+LDFLAGS = -L/home/laurent/devel/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/sysroot/usr/lib
 PROJECT = nrf
 NRFSTATICLIB=lib$(PROJECT).a
 EXECUTABLE = $(PROJECT)test

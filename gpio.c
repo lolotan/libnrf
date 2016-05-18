@@ -9,9 +9,6 @@
 #define BCM2708_PERI_BASE        0x20000000
 #define GPIO_BASE                (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
 
-#define GPIO_ON		1
-#define GPIO_OFF	0
-
 #define GPIO_IRQ	23
 #define GPIO_CE		24
 

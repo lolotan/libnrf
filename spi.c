@@ -66,7 +66,7 @@ int spi_send_command(char command, char * retstatus)
 int spi_command_write(char command, char * writebuffer, int length, char * retstatus)
 {
     int ret;
-	struct spi_ioc_transfer SpiCtrl[2];
+	struct spi_ioc_transfer spictrl[2];
     memset(spictrl, 0x00, sizeof(spictrl));
 	// Command Struct
 	spictrl[0].tx_buf = (unsigned long)&command;

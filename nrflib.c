@@ -24,7 +24,7 @@ int nrf_get_status(char * retstatus)
 	return spi_send_command(NOP, retstatus);
 }
 
-int nrf_flush_tX(char * retstatus)
+int nrf_flush_tx(char * retstatus)
 {
 	return spi_send_command(FLUSH_TX, retstatus);
 }
@@ -49,7 +49,7 @@ int nrf_read_register_mb(char reg, char * readbuffer, int length, char * retstat
     return spi_command_read((reg | R_REGISTER), readbuffer, length, retstatus);
 }
 
-int nrf_read_register(char reg, char * regValue, char * retstatus)
+int nrf_read_register(char reg, char * regval, char * retstatus)
 {
     return spi_command_read((reg | R_REGISTER), regval, 1, retstatus);
 }
@@ -239,16 +239,16 @@ void nrf_display_status(char Status)
 	printf("***********************\n");
 }
 
-int nrf_set_auto_retransmit_delay(int Delay, char * retstatus)
+int nrf_set_auto_retransmit_delay(int delay, char * retstatus)
 {
     // ARD
     int  ret;
-    char Reg;
-    ret = nrf_read_register(SETUP_RETR, &Reg, retstatus);
+    char reg;
+    ret = nrf_read_register(SETUP_RETR, &reg, retstatus);
     if (ret < 0)
         return ret;
-    Reg &=0x0F;
-    Reg |= (char)((Delay & 0x0F) << 4);
+    reg &=0x0F;
+    reg |= (char)((delay & 0x0F) << 4);
     return nrf_write_register(SETUP_RETR, reg, retstatus);
 }
 
@@ -288,14 +288,14 @@ int nrf_get_lost_retries_count(int * count, char * retstatus)
 int nrf_set_address_width(int width, char * retstatus)
 {
     if ((width < 3) || (width > 5))
-    	return nrf_ERROR;
+    	return NRF_ERROR;
 
     return nrf_write_register(SETUP_AW, (width & 0x03), retstatus);
 }
 
 int nrf_set_tx_address(const char * address, char * retstatus)
 {
-    return nrf_write_registerMB(TX_ADDR, (char *)address, 5, retstatus);
+    return nrf_write_register_mb(TX_ADDR, (char *)address, 5, retstatus);
 }
 
 int nrf_set_rx_address(datapipe_t datapipe, const char * address, char * retstatus)
@@ -326,7 +326,7 @@ int nrf_set_rx_address(datapipe_t datapipe, const char * address, char * retstat
     	rxpipeaddr = RX_ADDR_P0;
     }
 
-    return nrf_write_registerMB(rxpipeaddr, (char *)address, 5, retstatus);
+    return nrf_write_register_mb(rxpipeaddr, (char *)address, 5, retstatus);
 }
 
 int nrf_enable_datapipe(datapipe_t datapipe, char * retstatus)

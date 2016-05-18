@@ -8,83 +8,83 @@
 #include <string.h>
 #include "nrflib.h"
 
-void Test_Send(void)
+void test_send(void)
 {
-	char Status;
-	char RegVal;
-	int  Ret;
-	char TestBuffer[32];
-	const char * TestStr = "Hello World !";
+	char status;
+	char regval;
+	int  ret;
+	char testbuffer[32];
+	const char * teststr = "Hello World !";
 
 	printf("SEND TEST\n");
 
-	memset(TestBuffer, 0x00, sizeof(TestBuffer));
-	Ret = NRF_SetModePTX(&Status);
-	Ret = NRF_ReadRegister(CONFIG, &RegVal, &Status);
-	printf("CONFIG Value : %02X\n", RegVal);
+	memset(testbuffer, 0x00, sizeof(testbuffer));
+	ret = nrf_set_mode_ptx(&status);
+	ret = nrf_read_register(CONFIG, &regval, &status);
+	printf("CONFIG Value : %02X\n", regval);
 
-	memcpy(TestBuffer, TestStr, strlen(TestStr));
-	printf("Test buffer : %s\n", TestBuffer);
+	memcpy(testbuffer, teststr, strlen(teststr));
+	printf("Test buffer : %s\n", testbuffer);
 
-	Ret = NRF_WriteTXPayload(TestBuffer, 32, &Status);
+	ret = nrf_write_tx_payload(testbuffer, 32, &status);
 
-	NRF_TXPayload();
+	nrf_tx_payload();
 	printf("Payload transmitted\n");
 
-	Ret = NRF_GetStatus(&Status);
-	NRF_DisplayStatus(Status);
+	ret = nrf_get_status(&status);
+	nrf_display_status(status);
 
-	int PacketCount;
-	Ret = NRF_GetLostPacketsCount(&PacketCount, &Status);
-	printf("Lost Packets count : %d\n", PacketCount);
+	int packetcnt;
+	ret = nrf_get_lost_packets_count(&packetcnt, &status);
+	printf("Lost Packets count : %d\n", packetcnt);
 
-	Ret = NRF_GetLostRetriesCount(&PacketCount, &Status);
-	printf("Lost Packets retries : %d\n", PacketCount);
+	ret = nrf_get_lost_retries_count(&packetcnt, &status);
+	printf("Lost Packets retries : %d\n", packetcnt);
 }
 
-void Test_Receive(void)
+void test_receive(void)
 {
-	char Status;
-	char RegVal;
-	int  Ret;
-	int  DataReceived = 0;
-	int  LoopCounter = 30;
-	char TestBuffer[32];
+	char status;
+	char regval;
+	int  ret;
+	int  datarecv = 0;
+	int  loopcnt = 30;
+	char testbuffer[32];
 
 	printf("RECEIVE TEST\n");
 
-	memset(TestBuffer, 0x00, sizeof(TestBuffer));
-	Ret = NRF_SetModePRX(&Status);
-	Ret = NRF_ReadRegister(CONFIG, &RegVal, &Status);
-	printf("CONFIG Value : %02X\n", RegVal);
-	RegVal = 0x20;
-	Ret = NRF_SetDataPipeLength(P0, 32, &Status);
+	memset(testbuffer, 0x00, sizeof(testbuffer));
+	ret = nrf_set_mode_prx(&status);
+	ret = nrf_read_register(CONFIG, &regval, &status);
+	printf("CONFIG Value : %02X\n", regval);
+	regval = 0x20;
+	ret = nrf_set_datapipe_length(P0, 32, &status);
 	
-	NRF_StartRX();
+	nrf_start_rx();
 
-	while ((DataReceived == 0) && (LoopCounter--))
+	while ((datarecv == 0) && (loopcnt--))
 	{
-		NRF_GetStatus(&Status);
-		NRF_DisplayStatus(Status);
-		if ((Status & RX_DR) == RX_DR)
+		nrf_get_status(&status);
+		nrf_display_status(status);
+		if ((status & RX_DR) == RX_DR)
 		{
 			printf("*** Data received ***\n");
-			Ret = NRF_ReadRXPayload(TestBuffer,sizeof(TestBuffer),&Status);
-			printf("%s\n", TestBuffer);
-			DataReceived = 1;
-			NRF_ClearRX_DR(&Status);
+			ret = nrf_read_rx_payload(testbuffer,sizeof(testbuffer),&status);
+			printf("%s\n", testbuffer);
+			datarecv = 1;
+			nrf_clear_rx_dr(&status);
 		}
 		sleep(1);
 	}
 
-	NRF_StopRX();
+	nrf_stop_rx();
 }
 
 int main(int argc, char *argv[])
 {	
-    char Status;
-    int  Ret;
-    char Addr[] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
+    char status;
+    int  ret;
+    char addr[] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
     
     if ((argc != 2) || ((argc == 2) && (strcmp(argv[1],"TX") && strcmp(argv[1],"RX"))))
 	{
@@ -93,39 +93,31 @@ int main(int argc, char *argv[])
 	}
 
 	printf("*** Test nrf lib ***\n");
-    Ret  = NRF_Init();
-    Ret = NRF_SetPowerMode(POWER_ON, &Status);
-    Ret += NRF_ClearRX_DR(&Status);
-    Ret += NRF_ClearMAX_RT(&Status);
-    Ret += NRF_ClearTX_DS(&Status);
-    /*Ret += NRF_SetDataRate(DR2MBPS, &Status);
-    Ret += NRF_SetRFChannel(2, &Status);
-    Ret += NRF_SetPAControl(PA0DBM, &Status);
-    Ret += NRF_SetAutoRetransmitDelay(15, &Status);
-    Ret += NRF_SetAutoRetransmitCount(15, &Status);
-    Ret += NRF_SetAddressWidth(5, &Status);
-    Ret += NRF_SetTxAddress(Addr, &Status);
-    Ret += NRF_SetRxAddress(P0, Addr, &Status);*/
+    ret  = nrf_init();
+    ret  = nrf_set_power_mode(POWER_ON, &status);
+    ret += nrf_clear_rx_dr(&status);
+    ret += nrf_clear_max_rt(&status);
+    ret += nrf_clear_tx_ds(&status);
 
-    printf("Initialisation done - Ret : %d\n", Ret);
+    printf("Initialisation done - ret : %d\n", ret);
 
-    Ret = NRF_GetStatus(&Status);
-    NRF_DisplayStatus(Status);
+    ret = nrf_get_status(&status);
+    nrf_display_status(status);
 
 
-    Ret = NRF_FlushTX(&Status);
-    Ret = NRF_FlushRX(&Status);
+    ret = nrf_flush_tx(&status);
+    ret = nrf_flush_rx(&status);
 
     if (strcmp(argv[1],"TX") == 0)
     {
-		Test_Send();
+		test_send();
     }
     else if (strcmp(argv[1],"RX") == 0)
     {
-		Test_Receive();
+		test_receive();
     }
 
-    Ret = NRF_SetPowerMode(POWER_OFF, &Status);
+    ret = nrf_set_power_mode(POWER_OFF, &status);
 
     return 0;
 }

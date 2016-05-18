@@ -3,7 +3,8 @@
 /*   Platform dependent GPIO functions   */
 /*****************************************/
 
-
+#define GPIO_ON		1
+#define GPIO_OFF	0
 
 extern void gpio_init(void);
 extern void gpio_set_csn(int);
