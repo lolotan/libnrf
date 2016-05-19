@@ -1,0 +1,5 @@
+export TOOLCHAIN_DIR=/home/laurent/devel/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf
+export AR=$TOOLCHAIN_DIR/bin/arm-linux-gnueabihf-ar
+export CC=$TOOLCHAIN_DIR/bin/arm-linux-gnueabihf-cc
+export CFLAGS="-I$TOOLCHAIN_DIR/sysroot/usr/include -c -Wall -Wextra"
+export LDFLAGS="-L$TOOLCHAIN_DIR/sysroot/usr/lib"

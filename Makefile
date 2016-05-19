@@ -1,34 +1,14 @@
-CC = /home/laurent/devel/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin/arm-linux-gnueabihf-cc
-CFLAG = -I/home/laurent/devel/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/sysroot/usr/include -c -Wall -Wextra
-LDFLAGS = -L/home/laurent/devel/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/sysroot/usr/lib
 PROJECT = nrf
 NRFSTATICLIB=lib$(PROJECT).a
-EXECUTABLE = $(PROJECT)test
-MAIN = main
-OBJECTS = nrflib.o spi.o gpio.o timer.o
+OBJECTS = nrflib.o
 
-all: $(EXECUTABLE) $(NRFSTATICLIB)
-
-$(EXECUTABLE): $(NRFSTATICLIB) $(MAIN).o
-	$(CC) $(MAIN).o -static -L. -lnrf -o $(EXECUTABLE)
+all: $(NRFSTATICLIB)
 	
 $(NRFSTATICLIB): $(OBJECTS)
-	ar rcs $@ $^
+	$(AR) rcs $@ $^
 
-$(MAIN).o: $(MAIN).c
-	$(CC) $(CFLAG) $(MAIN).c
-
-nrflib.o: nrflib.c spi.o gpio.o timer.o
-	$(CC) $(CFLAG) nrflib.c
-	
-spi.o: spi.c
-	$(CC) $(CFLAG) spi.c
-
-gpio.o: gpio.c
-	$(CC) $(CFLAG) gpio.c
-	
-timer.o: timer.c
-	$(CC) $(CFLAG) timer.c
+nrflib.o: nrflib.c 
+	$(CC) $(CFLAGS) $(LDFLAGS) nrflib.c
 	
 clean:
-	rm -rf *.o *.a $(EXECUTABLE)
+	rm -rf *.o *.a
