@@ -8,7 +8,7 @@ $(NRFSTATICLIB): $(OBJECTS)
 	$(AR) rcs $@ $^
 
 $(OBJECTS): libnrf.c 
-	$(CC) $(CFLAGS) $(LDFLAGS) libnrf.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -c libnrf.c
 	
 clean:
 	rm -rf *.o *.a
