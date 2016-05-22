@@ -1,14 +1,14 @@
-PROJECT = nrf
-NRFSTATICLIB=lib$(PROJECT).a
-OBJECTS = nrflib.o
+PROJECT = libnrf
+NRFSTATICLIB=$(PROJECT).a
+OBJECTS = $(PROJECT).o
 
 all: $(NRFSTATICLIB)
 	
 $(NRFSTATICLIB): $(OBJECTS)
 	$(AR) rcs $@ $^
 
-nrflib.o: nrflib.c 
-	$(CC) $(CFLAGS) $(LDFLAGS) nrflib.c
+$(OBJECTS): libnrf.c 
+	$(CC) $(CFLAGS) $(LDFLAGS) libnrf.c
 	
 clean:
 	rm -rf *.o *.a

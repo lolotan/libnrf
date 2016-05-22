@@ -8,7 +8,7 @@
 #include "spi.h"
 #include "gpio.h"
 #include "timer.h"
-#include "nrflib.h"
+#include "libnrf.h"
 
 int nrf_init(void)
 {
