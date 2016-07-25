@@ -12,11 +12,10 @@
 
 int nrf_init(void)
 {
-	int ret = -1;
+	// Only spi_init has a return value
 	gpio_init();
-	timer_init();
-	ret = spi_init();
-	return ret;
+	timer_init();	
+	return spi_init();
 }
 
 int nrf_get_status(char * retstatus)
