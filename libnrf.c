@@ -389,7 +389,7 @@ int nrf_set_datapipe_length(datapipe_t datapipe, int length, char * retstatus)
 		break;
 	}
 
-    return nrf_write_register(rxplreg, (char)(length & 0x1F), retstatus);
+    return nrf_write_register(rxplreg, (char)length, retstatus);
 }
 
 void nrf_start_rx(void)
