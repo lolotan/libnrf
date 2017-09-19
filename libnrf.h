@@ -78,7 +78,9 @@ int nrf_set_mode_ptx(char *);
 int nrf_set_power_mode(powermode_t, char *);
 int nrf_set_data_rate(datarate_t, char *);
 int nrf_set_rf_channel(int, char *);
+int nrf_get_rf_channel(int *, char *);
 int nrf_set_pa_control(pactrl_t, char *);
+int nrf_get_pa_control(pactrl_t *, char *);
 
 int nrf_set_auto_retransmit_delay(int, char *); // p33/78
 int nrf_set_auto_retransmit_count(int, char *);
@@ -90,6 +92,8 @@ int nrf_set_tx_address(const char *, char *);
 int nrf_set_rx_address(datapipe_t, const char *, char *);
 int nrf_enable_datapipe(datapipe_t, char *);
 int nrf_set_datapipe_length(datapipe_t, int, char *);
+int nrf_enable_dynamic_payload(datapipe_t, char *);
+int nrf_get_payload_length(int *, char *);
 
 void nrf_start_rx(void);
 void nrf_stop_rx(void);

@@ -139,7 +139,12 @@ int nrf_set_power_mode(powermode_t Power, char * retstatus)
 
 int nrf_set_data_rate(datarate_t datarateval, char * retstatus)
 {
-    char rfsetup = 0x00;
+    int ret;
+    char rfsetup;
+    
+    ret = nrf_read_register(RF_SETUP, &rfsetup, retstatus);
+    if (ret < 0)
+        return ret;
     
     switch(datarateval)
     {
@@ -167,9 +172,16 @@ int nrf_set_data_rate(datarate_t datarateval, char * retstatus)
 
 int nrf_set_rf_channel(int rfchannel, char * retstatus)
 {
-    int ret;
     rfchannel &= 0x7F;
-    ret = nrf_write_register(RF_CH, (char)rfchannel, retstatus);
+    return nrf_write_register(RF_CH, (char)rfchannel, retstatus);
+}
+
+int nrf_get_rf_channel(int * rfchannel, char * retstatus)
+{
+    int ret;
+    char reg_val;
+    ret = nrf_read_register(RF_CH, &reg_val, retstatus);
+    *rfchannel = reg_val;
     return ret;
 }
 
@@ -185,6 +197,19 @@ int nrf_set_pa_control(pactrl_t pactrlval, char * retstatus)
     rfsetup &= 0xF9;
     rfsetup |= ((pactrlval << 1) & 0x06);
     ret = nrf_write_register(RF_SETUP, rfsetup, retstatus); 
+    return ret;
+}
+
+int nrf_get_pa_control(pactrl_t * pactrlval, char * retstatus)
+{
+    int ret;
+    char rfsetup;
+    
+    ret = nrf_read_register(RF_SETUP, &rfsetup, retstatus);
+    if (ret < 0)
+        return ret;
+    
+    *pactrlval = (pactrl_t)(rfsetup &= RF_PWR);
     return ret;
 }
 
@@ -389,6 +414,59 @@ int nrf_set_datapipe_length(datapipe_t datapipe, int length, char * retstatus)
 	}
 
     return nrf_write_register(rxplreg, (char)length, retstatus);
+}
+
+int nrf_enable_dynamic_payload(datapipe_t datapipe, char * retstatus)
+{    
+    int  ret;
+	char feature;
+    char dplreg;
+    
+    // First, enable dynamic payload in FEATURE register
+	ret = nrf_read_register(FEATURE, &feature, retstatus);
+	if (ret < 0)
+		return ret;
+        
+    if ((feature && EN_DPL) != EN_DPL)
+    {
+        feature |= EN_DPL;
+        ret = nrf_write_register(FEATURE, feature, retstatus);
+        if (ret < 0)
+            return ret;
+    }
+    
+    // Then, activating the requested datapipe dpl
+    ret = nrf_read_register(DYNPD, &dplreg, retstatus);
+	if (ret < 0)
+		return ret;
+        
+    switch (datapipe)
+    {
+     	case P0:
+		dplreg |= DPL_P0;
+		break;
+	case P1:
+		dplreg |= DPL_P1;
+		break;
+	case P2:
+		dplreg |= DPL_P2;
+		break;
+	case P3:
+		dplreg |= DPL_P3;
+		break;
+	case P4:
+		dplreg |= DPL_P4;
+		break;
+	case P5:
+		dplreg |= DPL_P5;
+		break;  
+    }
+    return ret = nrf_write_register(DYNPD, dplreg, retstatus);
+}
+
+int nrf_get_payload_length(int * Length, char * retstatus)
+{
+    return nrf_read_register(R_RX_PL_WID, (char *)Length, retstatus);
 }
 
 void nrf_start_rx(void)
