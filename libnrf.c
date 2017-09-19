@@ -464,9 +464,13 @@ int nrf_enable_dynamic_payload(datapipe_t datapipe, char * retstatus)
     return ret = nrf_write_register(DYNPD, dplreg, retstatus);
 }
 
-int nrf_get_payload_length(int * Length, char * retstatus)
+int nrf_get_payload_length(int * length, char * retstatus)
 {
-    return nrf_read_register(R_RX_PL_WID, (char *)Length, retstatus);
+    char reg;
+    int ret;
+    ret = nrf_read_register(R_RX_PL_WID, &reg, retstatus);
+    *length = reg & 0x3F;
+    return ret;
 }
 
 void nrf_start_rx(void)
